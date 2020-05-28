@@ -4,6 +4,7 @@
 
 from graph import *
 from visualizer import *
+from complexVisualizer import *
 
 # Get minimum value of the row i
 def MinRow(M, i, length):
@@ -174,3 +175,4 @@ else:
     print("Tidak ada rute perjalanan terpendek TSP yang tersedia!")
 
 VisualizeGraph(streets, routeParent, length)
+VisualizeComplexGraph(BaseCity, streets, routeParent, maps, length)

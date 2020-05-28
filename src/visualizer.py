@@ -1,5 +1,5 @@
 # visualizer.py
-# Module to visualize the map and the streets
+# Module to visualize the map and the streets in simple way
 
 import graphviz
 
