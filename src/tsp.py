@@ -3,6 +3,7 @@
 # Using reduced cost matrix
 
 from graph import *
+from visualizer import *
 
 # Get minimum value of the row i
 def MinRow(M, i, length):
@@ -171,3 +172,5 @@ if (IsAllVisited):
     print("Jarak tempu perjalanan =", rootcost, "km")
 else:
     print("Tidak ada rute perjalanan terpendek TSP yang tersedia!")
+
+VisualizeGraph(streets, routeParent, length)
