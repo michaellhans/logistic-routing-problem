@@ -33,8 +33,8 @@ def LoadStreet(fileName):
 def ConvertStreetsIntoGraph(streets, numOfCity):
     graphMatrix = [[-999 for j in range(numOfCity)] for i in range(numOfCity)]
     for edge in streets:
-        graphMatrix[int(edge[1])-1][int(edge[2])-1] = edge[3]
-        graphMatrix[int(edge[2])-1][int(edge[1])-1] = edge[3]
+        graphMatrix[int(edge[1])-1][int(edge[2])-1] = int(edge[3])
+        graphMatrix[int(edge[2])-1][int(edge[1])-1] = int(edge[3])
     return graphMatrix
 
 # Print matrix into screen
@@ -75,7 +75,7 @@ def Milestone1():
     PrintMatrix(graphMatrix, len(maps))
 
 # Driver for Graph
-Milestone1()
+# Milestone1()
 # maps = {}
 # maps = LoadCoordinate("SthyrelestNode.txt")
 # PrintCoordinateInfo(maps)
