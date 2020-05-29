@@ -117,65 +117,69 @@ def PrintRoute(route):
     print(route[len(route)-1])
 
 # Driver for TSP
-maps = {}
-fileNode = input("Masukkan nama file koordinat  : ")
-fileEdge = input("Masukkan nama file jalanan    : ")
-maps = LoadCoordinate(fileNode)
-streets = LoadStreet(fileEdge)
-PrintCoordinateInfo(maps)
-PrintStreetInfo(streets)
-length = len(maps)
-graphMatrix = ConvertStreetsIntoGraph(streets, length)
-PrintMatrix(graphMatrix, length)
+# maps = {}
+# fileNode = input("Masukkan nama file koordinat  : ")
+# fileEdge = input("Masukkan nama file jalanan    : ")
+# maps = LoadCoordinate(fileNode)
+# streets = LoadStreet(fileEdge)
+# PrintCoordinateInfo(maps)
+# PrintStreetInfo(streets)
+# length = len(maps)
 
-MBase, rootcost = GetReducedMatrix(graphMatrix, length)
-PrintMatrix(MBase, length)
-print("Reduced root cost =", rootcost)
-print("Start here")
+# # Visualize the Map
+# VisualizeComplexGraph(0, streets, [], maps, length)
 
-routeParent = [0]
-QueueRoute = []
-StartingCity = 0
-BaseCity = StartingCity
-count = 0
-while (not(IsAllVisited(MBase, length))):
-    for j in range(length):
-        route = []
-        route = route + routeParent
-        if (MBase[StartingCity][j] != -999):
-            count += 1
-            temp = MBase[StartingCity][j]
-            print("Simpul",count,":",StartingCity, "->", j)
-            PrintMatrix(MBase, length)
-            M, cost = CalculateCost(MBase, length, StartingCity, j, BaseCity)
-            PrintMatrix(M, length)
-            finalcost = rootcost + temp + cost
-            print("Reduced total cost = "+str(rootcost)+" + "+"M["+str(StartingCity)+","+str(j)+"] + "+str(cost)+" = "+str(finalcost))
-            route.append(j)
-            print("Route for node",count,"==>",end=" ")
-            PrintRoute(route)
-            QueueRoute.append([finalcost, M, count, route])
-            input()
+# graphMatrix = ConvertStreetsIntoGraph(streets, length)
+# PrintMatrix(graphMatrix, length)
 
-    QueueRoute.sort()
-    if (len(QueueRoute) == 0):
-        print("Rute perjalanan bolak-balik tidak ditemukan!")
-        break
+# MBase, rootcost = GetReducedMatrix(graphMatrix, length)
+# PrintMatrix(MBase, length)
+# print("Reduced root cost =", rootcost)
+# print("Start here")
 
-    nextState = QueueRoute.pop(0)
-    MBase = nextState[1]
-    StartingCity = nextState[3][-1]
-    routeParent = nextState[3]
-    rootcost = nextState[0]
+# routeParent = [0]
+# QueueRoute = []
+# StartingCity = 0
+# BaseCity = StartingCity
+# count = 0
+# while (not(IsAllVisited(MBase, length))):
+#     for j in range(length):
+#         route = []
+#         route = route + routeParent
+#         if (MBase[StartingCity][j] != -999):
+#             count += 1
+#             temp = MBase[StartingCity][j]
+#             print("Simpul",count,":",StartingCity, "->", j)
+#             PrintMatrix(MBase, length)
+#             M, cost = CalculateCost(MBase, length, StartingCity, j, BaseCity)
+#             PrintMatrix(M, length)
+#             finalcost = rootcost + temp + cost
+#             print("Reduced total cost = "+str(rootcost)+" + "+"M["+str(StartingCity)+","+str(j)+"] + "+str(cost)+" = "+str(finalcost))
+#             route.append(j)
+#             print("Route for node",count,"==>",end=" ")
+#             PrintRoute(route)
+#             QueueRoute.append([finalcost, M, count, route])
+#             input()
 
-if (IsAllVisited):
-    print("Rute telah ditemukan!")
-    routeParent.append(BaseCity)
-    print("Rute perjalanan terpendek TSP adalah ",end=" ")
-    PrintRoute(routeParent)
-    print("Jarak tempu perjalanan =", rootcost, "km")
-else:
-    print("Tidak ada rute perjalanan terpendek TSP yang tersedia!")
+#     QueueRoute.sort()
+#     if (len(QueueRoute) == 0):
+#         print("Rute perjalanan bolak-balik tidak ditemukan!")
+#         break
 
-VisualizeGraph(streets, routeParent, length, fileNode)
-VisualizeComplexGraph(BaseCity, streets, routeParent, maps, length)
+#     nextState = QueueRoute.pop(0)
+#     MBase = nextState[1]
+#     StartingCity = nextState[3][-1]
+#     routeParent = nextState[3]
+#     rootcost = nextState[0]
+
+# if (IsAllVisited):
+#     print("Rute telah ditemukan!")
+#     routeParent.append(BaseCity)
+#     print("Rute perjalanan terpendek TSP adalah ",end=" ")
+#     PrintRoute(routeParent)
+#     print("Jarak tempu perjalanan =", rootcost, "km")
+# else:
+#     print("Tidak ada rute perjalanan terpendek TSP yang tersedia!")
+
+# VisualizeGraph(streets, routeParent, length, fileNode)
+# VisualizeComplexGraph(BaseCity, streets, routeParent, maps, length)

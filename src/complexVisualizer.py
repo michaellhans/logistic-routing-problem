@@ -5,20 +5,22 @@ import matplotlib.pyplot as plt
 from visualizer import CheckStreetInRoute
 
 # Plot a point on workspace
-def Plotting(P, name, flag):
-    x = int(P.getX())
-    y = int(P.getY())
-    if flag:
+def Plotting(P, name, k):
+    x = float(P.getX())
+    y = float(P.getY())
+    if (k == 1):
         plt.plot([x], [y], 'ro', color = "green")
-    else:
+    elif (k == 2):
         plt.plot([x], [y], 'ro', color = "blue")
-    label = "%d(%d,%d)" % (name, x, y)
-    plt.annotate(label, (x,y), textcoords="offset points", xytext=(0,10), ha='center')
+    else :
+        plt.plot([x], [y], 'ro', color = "black")
+    # label = "%d(%d,%d)" % (name, x, y)
+    # plt.annotate(label, (x,y), textcoords="offset points", xytext=(0,10), ha='center')
 
 # Connect two points
 def ConnectPoints(maps, origin, destination, cost, flag):
-    x1, x2 = int(maps[origin].getX()), int(maps[destination].getX())
-    y1, y2 = int(maps[origin].getY()), int(maps[destination].getY())
+    x1, x2 = float(maps[origin].getX()), float(maps[destination].getX())
+    y1, y2 = float(maps[origin].getY()), float(maps[destination].getY())
     if (flag):
         plt.plot([x1,x2],[y1,y2],'k-', color = "red")
     else:
@@ -32,12 +34,15 @@ def VisualizeComplexGraph(basecity, streets, route, maps, length):
         else:
             ConnectPoints(maps, street[1], street[2], street[3], False)
 
+    for city in maps:
+        Plotting(maps[city], float(city), 3)
+
     for city in route:
         P = maps[str(city+1)]
-        Plotting(P, city+1, False)
+        Plotting(P, city+1, 2)
 
     P = maps[str(basecity+1)]
-    Plotting(P, basecity+1, True)
+    Plotting(P, basecity+1, 1)
 
     plt.axis('equal')
     plt.title('Logistic Routing Problem')
