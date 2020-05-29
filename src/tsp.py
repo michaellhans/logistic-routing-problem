@@ -116,7 +116,18 @@ def PrintRoute(route):
         print(route[i],"->", end=" ")
     print(route[len(route)-1])
 
-# Driver for TSP
+# Calculate the cost of the route
+def CalculateRouteCost(route, MRoot):
+    total = 0
+    for i in range (len(route)-1):
+        total += MRoot[i][i+1]
+    return total
+
+# Is there a road
+def IsStreetAvailable(origin, destination, MRoot):
+    return (MRoot[origin][destination] != -999)
+
+# # Driver for TSP
 # maps = {}
 # fileNode = input("Masukkan nama file koordinat  : ")
 # fileEdge = input("Masukkan nama file jalanan    : ")
@@ -133,6 +144,7 @@ def PrintRoute(route):
 # PrintMatrix(graphMatrix, length)
 
 # MBase, rootcost = GetReducedMatrix(graphMatrix, length)
+# MFirst = CopyMatriks(MBase, length)
 # PrintMatrix(MBase, length)
 # print("Reduced root cost =", rootcost)
 # print("Start here")
