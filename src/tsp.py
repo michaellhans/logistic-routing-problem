@@ -6,6 +6,15 @@ from graph import *
 from visualizer import *
 from complexVisualizer import *
 
+# function CopyMatriks (input A: Matriks) -> Matriks
+# Mengembalikan matriks yang merupakan hasil salinan dari matriks A
+def CopyMatriks (A, length):
+    M = [[0 for j in range(length)] for i in range(length)]
+    for i in range(length):
+        for j in range(length):
+            M[i][j] = A[i][j]
+    return M
+
 # Get minimum value of the row i
 def MinRow(M, i, length):
     min = 999999
@@ -64,7 +73,7 @@ def CheckZeroInColumn(M, j, length):
 
 # Get Reduced Matrix using Reduced Cost Matrix
 def GetReducedMatrix(M, length):
-    MTemp = M
+    MTemp = CopyMatriks(M, length)
     cost = 0
     # Make at least one zero in every row
     for i in range (length):
@@ -84,14 +93,14 @@ def GetReducedMatrix(M, length):
 
 # Applying three golden rules for reduced cost matrix
 def CalculateCost(M, length, i, j, BaseCity):
-    MTemp = M
+    MCopy = CopyMatriks(M, length)
     for k in range (length):
-        MTemp[i][k] = -999
+        MCopy[i][k] = -999
     for k in range (length):
-        MTemp[k][j] = -999
-    MTemp[j][i] = -999
-    MTemp[j][BaseCity] = -999
-    return GetReducedMatrix(MTemp, length)
+        MCopy[k][j] = -999
+    MCopy[j][i] = -999
+    MCopy[j][BaseCity] = -999
+    return GetReducedMatrix(MCopy, length)
 
 # Applying three golden rules for reduced cost matrix
 def ApplyTheRules(M, length, i, j):
@@ -117,16 +126,18 @@ def PrintRoute(route):
 
 # Driver for TSP
 maps = {}
-maps = LoadCoordinate("SthyrelestNode.txt")
+fileNode = input("Masukkan nama file koordinat  : ")
+fileEdge = input("Masukkan nama file jalanan    : ")
+maps = LoadCoordinate(fileNode)
+streets = LoadStreet(fileEdge)
 PrintCoordinateInfo(maps)
-streets = LoadStreet("SthyrelestEdge.txt")
 PrintStreetInfo(streets)
 length = len(maps)
 graphMatrix = ConvertStreetsIntoGraph(streets, length)
 PrintMatrix(graphMatrix, length)
 
-MTemp, rootcost = GetReducedMatrix(graphMatrix, length)
-PrintMatrix(MTemp, length)
+MBase, rootcost = GetReducedMatrix(graphMatrix, length)
+PrintMatrix(MBase, length)
 print("Reduced root cost =", rootcost)
 print("Start here")
 # ApplyTheRules(MTemp, length, 0, 1)
@@ -137,33 +148,35 @@ QueueRoute = []
 StartingCity = 0
 BaseCity = StartingCity
 count = 0
-while (not(IsAllVisited(MTemp, length))):
+while (not(IsAllVisited(MBase, length))):
     for j in range(length):
-        route = routeParent
-        if (MTemp[StartingCity][j] != -999):
+        route = []
+        route = route + routeParent
+        if (MBase[StartingCity][j] != -999):
             count += 1
-            temp = MTemp[StartingCity][j]
+            temp = MBase[StartingCity][j]
             print("Simpul",count,":",StartingCity, "->", j)
-            M, cost = CalculateCost(MTemp, length, StartingCity, j, BaseCity)
+            PrintMatrix(MBase, length)
+            M, cost = CalculateCost(MBase, length, StartingCity, j, BaseCity)
             PrintMatrix(M, length)
             finalcost = rootcost + temp + cost
             print("Reduced total cost = "+str(rootcost)+" + "+"M["+str(StartingCity)+","+str(j)+"] + "+str(cost)+" = "+str(finalcost))
             route.append(j)
             print("Route for node",count,"==>",end=" ")
             PrintRoute(route)
-            QueueRoute.append([count, M, finalcost, route])
+            QueueRoute.append([finalcost, M, count, route])
             input()
-    QueueRoute.sort()
 
+    QueueRoute.sort()
     if (len(QueueRoute) == 0):
         print("Rute perjalanan bolak-balik tidak ditemukan!")
         break
 
-    nextState = QueueRoute.pop()
-    MTemp = nextState[1]
+    nextState = QueueRoute.pop(0)
+    MBase = nextState[1]
     StartingCity = nextState[3][-1]
     routeParent = nextState[3]
-    rootcost = nextState[2]
+    rootcost = nextState[0]
 
 if (IsAllVisited):
     print("Rute telah ditemukan!")
@@ -174,5 +187,5 @@ if (IsAllVisited):
 else:
     print("Tidak ada rute perjalanan terpendek TSP yang tersedia!")
 
-VisualizeGraph(streets, routeParent, length)
+VisualizeGraph(streets, routeParent, length, fileNode)
 VisualizeComplexGraph(BaseCity, streets, routeParent, maps, length)

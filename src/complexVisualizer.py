@@ -27,7 +27,7 @@ def ConnectPoints(maps, origin, destination, cost, flag):
 # Visualize the graph from street, route, and length of the map information
 def VisualizeComplexGraph(basecity, streets, route, maps, length):
     for street in streets:
-        if (CheckStreetInRoute(street[1], street[2], route)):
+        if ((CheckStreetInRoute(street[1], street[2], route)) or (CheckStreetInRoute(street[2], street[1], route))):
             ConnectPoints(maps, street[1], street[2], street[3], True)
         else:
             ConnectPoints(maps, street[1], street[2], street[3], False)
