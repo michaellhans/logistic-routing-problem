@@ -102,14 +102,6 @@ def CalculateCost(M, length, i, j, BaseCity):
     MCopy[j][BaseCity] = -999
     return GetReducedMatrix(MCopy, length)
 
-# Applying three golden rules for reduced cost matrix
-def ApplyTheRules(M, length, i, j):
-    for k in range (length):
-        M[i][k] = -999
-    for k in range (length):
-        M[k][j] = -999
-    M[j][i] = -999
-
 # Check if all city is visited
 def IsAllVisited(M, length):
     for i in range(length):
@@ -140,8 +132,6 @@ MBase, rootcost = GetReducedMatrix(graphMatrix, length)
 PrintMatrix(MBase, length)
 print("Reduced root cost =", rootcost)
 print("Start here")
-# ApplyTheRules(MTemp, length, 0, 1)
-# PrintMatrix(MTemp, length)
 
 routeParent = [0]
 QueueRoute = []
