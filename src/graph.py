@@ -2,6 +2,7 @@
 # Contain of all module to generate graph
 
 from point import *
+import numpy as np
 
 # Load Coordinate of the City
 def LoadCoordinate(fileName):
@@ -31,10 +32,10 @@ def LoadStreet(fileName):
 
 # Convert from streets info into Graph
 def ConvertStreetsIntoGraph(streets, numOfCity):
-    graphMatrix = [[-999 for j in range(numOfCity)] for i in range(numOfCity)]
+    graphMatrix = [[np.inf for j in range(numOfCity)] for i in range(numOfCity)]
     for edge in streets:
-        graphMatrix[int(edge[1])-1][int(edge[2])-1] = int(edge[3])
-        graphMatrix[int(edge[2])-1][int(edge[1])-1] = int(edge[3])
+        graphMatrix[int(edge[1])-1][int(edge[2])-1] = float(edge[3])
+        graphMatrix[int(edge[2])-1][int(edge[1])-1] = float(edge[3])
     return graphMatrix
 
 # Print matrix into screen
@@ -43,7 +44,7 @@ def PrintMatrix (A, numOfCity):
     for i in range (0,numOfCity):
         print("|", end="")
         for j in range (0,numOfCity):
-            if (A[i][j] == -999):
+            if (A[i][j] == np.inf):
                 print(" ~inf~\t|",end="")
             else:
                 print(" "+str(A[i][j])+"\t|",end="")
