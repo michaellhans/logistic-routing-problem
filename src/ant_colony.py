@@ -28,19 +28,29 @@ class AntColony(object):
         self.alpha = alpha
         self.beta = beta
 
+    # Execute ant-colony optimization algorithm to get shortest TSP route
     def run(self):
         shortest_path = None
+        found = False
         all_time_shortest_path = ("placeholder", np.inf)
+        most_cities = ("placeholder", np.inf)
         for i in range(self.n_iterations):
             all_paths = self.gen_all_paths()
             self.spread_pheronome(all_paths, self.n_best, shortest_path=shortest_path)
             shortest_path = min(all_paths, key=lambda x: x[1])
             print (shortest_path)
             if (shortest_path[0][-1][1] == 0):
-                if shortest_path[1] < all_time_shortest_path[1]:
-                    all_time_shortest_path = shortest_path            
-            self.pheromone * self.decay            
-        return all_time_shortest_path
+                found = True
+                if ((shortest_path[1] < all_time_shortest_path[1]) and (shortest_path[1] != np.inf)):
+                    all_time_shortest_path = shortest_path  
+            else:
+                if ((shortest_path[1] < all_time_shortest_path[1]) and (shortest_path[1] != np.inf)):
+                    most_cities = shortest_path          
+            self.pheromone * self.decay
+        if (found):            
+            return all_time_shortest_path
+        else:
+            return most_cities
 
     def spread_pheronome(self, all_paths, n_best, shortest_path):
         sorted_paths = sorted(all_paths, key=lambda x: x[1])

@@ -47,13 +47,13 @@ def SubGraph(G, subCities, totalCities):
     PrintMatrix(SubG, len(subCities))
     return SubG
 
-
+# Create all sub graphs according to list of sub cities
 def CreateAllSubGraphs(G, listOfSubCities, numOfCities):
     TotalMaps = []
     for i in range(len(listOfSubCities)):
         TotalMaps.append(SubGraph(G, listOfSubCities[i], numOfCities))
         input()
-    print(TotalMaps)
+    return TotalMaps
 
 # Divide a graph into n subgraph
 def CitiesIntoSubCities(numOfCity, numOfSalesman, baseCity):
@@ -69,6 +69,17 @@ def CitiesIntoSubCities(numOfCity, numOfSalesman, baseCity):
     for i in range(numOfSalesman):
         listOfSubCities[i] = listOfSubCities[i] + partition[i]
     return listOfSubCities 
+
+# Validize the route into the real route
+def ValidizeRoute(rawRoute, subcities):
+    for i in range(len(rawRoute)):
+        rawRoute[i] = subcities[rawRoute[i]]
+
+# Print route
+def PrintRoute(route):
+    for i in range (len(route)-1):
+        print(route[i],"->", end=" ")
+    print(route[len(route)-1])
 
 # Driver for TSP with ACO
 maps = {}
@@ -94,11 +105,21 @@ print(ListOfSubCities)
 
 MBase = ConvertStreetsIntoGraph(streets, length)
 PrintMatrix(MBase, length)
-CreateAllSubGraphs(MBase, ListOfSubCities, length)
-ant_colony = AntColony(np.array(MBase), 1, 1, 100, 0.95, alpha=1, beta=1)
-shortest_path = ant_colony.run()
-print ("Shortest path: {}".format(shortest_path))
-routeParent = ConvertIntoRoute(shortest_path)
 
-# VisualizeGraph(streets, routeParent, length, fileNode)
-VisualizeComplexGraph(shortest_path[0][0][0], streets, routeParent, maps, length)
+for j in range(10):
+    MSub = []
+    MSub = CreateAllSubGraphs(MBase, ListOfSubCities, length)
+    routes = []
+    for i in range(numOfSalesman):
+        ant_colony = AntColony(np.array(MSub[i]), 1, 1, 100, 0.95, alpha=1, beta=1)
+        shortest_path = ant_colony.run()
+        print ("Shortest path: {}".format(shortest_path))
+        routeParent = ConvertIntoRoute(shortest_path)
+        ValidizeRoute(routeParent, ListOfSubCities[i])
+        print ("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(shortest_path[1])+" km")
+        PrintRoute(routeParent)
+        routes.append(routeParent)
+        input()
+    # VisualizeGraph(streets, routeParent, length, fileNode)
+    # VisualizeComplexGraph(shortest_path[0][0][0], streets, routeParent, maps, length)
+    VisualizeComplexGraphMTSP(shortest_path[0][0][0], streets, routes, maps, length)
