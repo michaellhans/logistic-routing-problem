@@ -4,8 +4,8 @@
 class Point:
     # Constructor to create new point(x,y) object
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.x = int(x)
+        self.y = int(y)
 
     # Get the x-value of the point
     def getX(self):

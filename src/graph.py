@@ -1,76 +1,43 @@
-# Graph.py
-# Contain of all module to generate graph
+# graph.py
+# This class represent a graph
+# Reference : https://www.annytab.com/a-star-search-algorithm-in-python/
 
-from point import *
-import numpy as np
+class Graph:
+    # Initialize the class
+    def __init__(self, graph_dict=None, directed=True):
+        self.graph_dict = graph_dict or {}
+        self.directed = directed
+        if not directed:
+            self.make_undirected()
 
-# Load Coordinate of the City
-def LoadCoordinate(fileName):
-    f = open("../test/"+fileName, "r")
-    text = f.read()
-    f.close()
-    maps = {}
-    x = text.split("\n")
-    for node in x:
-        city = []
-        city = node.split(" ")
-        coordinate = Point(city[1], city[2])
-        maps.update({city[0] : coordinate})
-    return maps
+    # Create an undirected graph by adding symmetric edges
+    def make_undirected(self):
+        for a in list(self.graph_dict.keys()):
+            for (b, dist) in self.graph_dict[a].items():
+                self.graph_dict.setdefault(b, {})[a] = dist
 
-# Load every street or edge of the map
-def LoadStreet(fileName):
-    f = open("../test/"+fileName, "r")
-    text = f.read()
-    f.close()
-    streets = []
-    x = text.split("\n")
-    for edge in x:
-        streetInfo = edge.split(" ")
-        streets.append(streetInfo)
-    return streets
+    # Add a link from A and B of given distance, and also add the inverse link if the graph is undirected
+    def connect(self, A, B, distance=1):
+        self.graph_dict.setdefault(A, {})[B] = distance
+        if not self.directed:
+            self.graph_dict.setdefault(B, {})[A] = distance
 
-# Convert from streets info into Graph
-def ConvertStreetsIntoGraph(streets, numOfCity):
-    graphMatrix = [[np.inf for j in range(numOfCity)] for i in range(numOfCity)]
-    for edge in streets:
-        graphMatrix[int(edge[1])-1][int(edge[2])-1] = float(edge[3])
-        graphMatrix[int(edge[2])-1][int(edge[1])-1] = float(edge[3])
-    return graphMatrix
+    # Get neighbors or a neighbor
+    def get(self, a, b=None):
+        links = self.graph_dict.setdefault(a, {})
+        if b is None:
+            return links
+        else:
+            return links.get(b)
 
-# Print matrix into screen
-def PrintMatrix (A, numOfCity):
-    print("Graph Representation: ")
-    for i in range (0,numOfCity):
-        print("|", end="")
-        for j in range (0,numOfCity):
-            if (A[i][j] == np.inf):
-                print(" ~inf~\t|",end="")
-            else:
-                print(" "+str(A[i][j])+"\t|",end="")
-        print()
-    print()
+    # Return a list of nodes in the graph
+    def nodes(self):
+        s1 = set([k for k in self.graph_dict.keys()])
+        s2 = set([k2 for v in self.graph_dict.values() for k2, v2 in v.items()])
+        nodes = s1.union(s2)
+        return list(nodes)
 
-# Print each coordinate of the node from the maps
-def PrintCoordinateInfo(maps):
-    print("Coordinate Maps: ")
-    for node in maps:
-        print(node, "->", maps[node].printInfo())
-    print()
-
-# Print each street info and its distance from the streets
-def PrintStreetInfo(streets):
-    print("Streets of the Maps: ")
-    for edge in streets:
-        print(edge[0], ":", edge[1], "->", edge[2], "=", edge[3])
-    print()
-
-# Milestone 1 : Generate graph in matrix
-def Milestone1():
-    maps = {}
-    maps = LoadCoordinate("SthyrelestNode.txt")
-    PrintCoordinateInfo(maps)
-    streets = LoadStreet("SthyrelestEdge.txt")
-    PrintStreetInfo(streets)
-    graphMatrix = ConvertStreetsIntoGraph(streets, len(maps))
-    PrintMatrix(graphMatrix, len(maps))
+    # Convert from streets information into Graph edges
+    def streetsToGraph(self, streets):
+        for edge in streets:
+            self.connect(edge[1], edge[2], float(edge[3]))

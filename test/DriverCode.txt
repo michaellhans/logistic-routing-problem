@@ -1,4 +1,4 @@
-Driver for Point
+# Driver for Point
 P1 = Point(2,4)
 P2 = Point(4,8)
 P3 = Point(6,4)
@@ -21,3 +21,19 @@ print(P8.distanceTo(P2))
 print(P8.distanceTo(P7))
 print(P7.distanceTo(P9))
 print(P2.distanceTo(P7))
+
+# Driver for Dijkstra
+Graph = [[np.inf, 4, np.inf, np.inf, np.inf, np.inf, np.inf, 8, np.inf], 
+        [4, np.inf, 8, np.inf, np.inf, np.inf, np.inf, 11, np.inf], 
+        [np.inf, 8, np.inf, 7, np.inf, 4, np.inf, np.inf, 2], 
+        [np.inf, np.inf, 7, np.inf, 9, 14, np.inf, np.inf, np.inf], 
+        [np.inf, np.inf, np.inf, 9, np.inf, 10, np.inf, np.inf, np.inf], 
+        [np.inf, np.inf, 4, 14, 10, np.inf, 2, np.inf, np.inf], 
+        [np.inf, np.inf, np.inf, np.inf, np.inf, 2, np.inf, 1, 6], 
+        [8, 11, np.inf, np.inf, np.inf, np.inf, 1, np.inf, 7], 
+        [np.inf, np.inf, 2, np.inf, np.inf, np.inf, 6, 7, np.inf] 
+        ]; 
+
+Origin = 0
+Solution, parent = dijkstra(Graph, 0, 9)
+printSolution(Solution, parent)

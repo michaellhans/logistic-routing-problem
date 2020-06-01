@@ -5,7 +5,13 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import random
-from visualizer import CheckStreetInRoute
+
+# Check if the street is in route
+def CheckStreetInRoute(origin, destination, route):
+    for i in range (len(route)-1):
+        if ((route[i] == int(origin)) and (route[i+1] == int(destination))):
+            return True
+    return False
 
 # Plot a point on workspace
 def Plotting(P, name, k):

@@ -1,9 +1,10 @@
 # acoMTSP.py
 # Calculate mTSP route with ant colony optimization
 
-from graph import *
+from loader import *
 from visualizer import *
 from ant_colony import *
+from astar import *
 import more_itertools as mit
 import random
 
@@ -122,6 +123,8 @@ originCity = int(input("Masukkan kota depot / asal\t: "))
 # fileEdge = "MTSPEdge2.txt"
 # numOfSalesman = 2
 # originCity = 1
+# maps = LoadCoordinate(fileNode)
+# streets = LoadStreet(fileEdge)
 
 # Print all information about maps coordinate and streets
 PrintCoordinateInfo(maps)

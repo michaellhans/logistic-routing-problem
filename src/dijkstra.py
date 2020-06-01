@@ -1,4 +1,4 @@
-# djikstra.py
+# Dijkstra.py
 # Dijkstra Algorithm for Pathfinding
 # Reference : Rinaldi Munir
 
@@ -23,15 +23,18 @@ def dijkstra(G, a, n):
     # Initialize S and Distance
     S = []
     dist = []
+    parent = []
+
     for i in range(n):
         S.append(False)
         dist.append(np.inf)
-    
+        parent.append(-1)
+
     S[a] = True
     dist[a] = 0
 
     # Search for minimum distance from a to every node
-    for num in range(n):
+    for num in range(2,n):
         # Determine n-1 paths from v
         # Choose u from among those vertices not in S such that dist[u] is minimum
         u = minDistance(dist, S, n)
@@ -40,26 +43,21 @@ def dijkstra(G, a, n):
         for w in range(n):
             if ((S[w] == False) and (dist[w] > dist[u] + G[u][w])):
                 dist[w] = dist[u] + G[u][w]
+                parent[w] = u
 
-    return dist
+    return dist, parent
+
+# Print the path for all solution for dijkstra
+def getPath(parent, v):
+    path = []
+    if (parent[v] == -1):
+        path = [v]
+    else:
+        path = getPath(parent, parent[v]) + [v]
+    return path
 
 # Print all solution for dijkstra
-def printSolution(solution): 
-    print("Vertex \tDistance from Source")
+def printSolution(solution, parent): 
+    print("Vertex \tDistance \t\tPath")
     for node in range(len(solution)): 
-        print(node, "\t", solution[node]) 
-
-Graph = [[np.inf, 4, np.inf, np.inf, np.inf, np.inf, np.inf, 8, np.inf], 
-        [4, np.inf, 8, np.inf, np.inf, np.inf, np.inf, 11, np.inf], 
-        [np.inf, 8, np.inf, 7, np.inf, 4, np.inf, np.inf, 2], 
-        [np.inf, np.inf, 7, np.inf, 9, 14, np.inf, np.inf, np.inf], 
-        [np.inf, np.inf, np.inf, 9, np.inf, 10, np.inf, np.inf, np.inf], 
-        [np.inf, np.inf, 4, 14, 10, np.inf, 2, np.inf, np.inf], 
-        [np.inf, np.inf, np.inf, np.inf, np.inf, 2, np.inf, 1, 6], 
-        [8, 11, np.inf, np.inf, np.inf, np.inf, 1, np.inf, 7], 
-        [np.inf, np.inf, 2, np.inf, np.inf, np.inf, 6, 7, np.inf] 
-        ]; 
-
-Origin = 0
-Solution = dijkstra(Graph, 0, 9)
-printSolution(Solution)
+        print(node, "\t", solution[node], "\t\t", getPath(parent, node)) 
