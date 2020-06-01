@@ -94,6 +94,29 @@ def detailToSimple(path):
 def getCost(path):
     return path[-1][1]
 
+# Generate distance matrix based on distance of the A* path
+def generateAStarParameter(destination, maps, graph):
+    heuristicList = []
+    for i in range(len(destination)):
+        h = {}
+        h = heuristics(maps, maps.get(destination[i]))
+        heuristicList.append(h)
+
+    distance = [[np.inf for j in range(len(destination))] for i in range(len(destination))]
+    routes = [[None for j in range(len(destination))] for i in range(len(destination))]
+    for i in range(len(destination)):
+        for j in range(len(destination)):
+            if (i != j):
+                # Run the search algorithm
+                path = astar_search(graph, h, destination[i], destination[j])
+                print(path)
+                route = detailToSimple(path)
+                routes[i][j] = route
+                distance[i][j] = getCost(path)
+
+    return distance, routes
+
+
 # The main entry point for this module
 def main():
     # Quick test for quick debugging
@@ -113,27 +136,27 @@ def main():
     graph.make_undirected()
 
     routes = []
-    firstCity = '1'
-    destination = [str(i*10 + random.randint(0,20)) for i in range(5)]
-    destination.append(firstCity)
+    destination = [str(i*10 + random.randint(0,20)) for i in range(6)]
+    firstCity = destination[1]
     print(destination)
     input()
-    for i in range(5):
-        # Create heuristics (straight-line distance, air-travel distance)
-        h = {}
-        h = heuristics(maps, maps.get(destination[i]))
+    MCost, MRoute = generateAStarParameter(destination, maps, graph)
+    PrintMatrix(MCost, len(destination))
+    # for i in range(5):
+    #     # Create heuristics (straight-line distance, air-travel distance)
+    #     h = {}
+    #     h = heuristics(maps, maps.get(destination[i]))
 
-        # Run the search algorithm
-        path = astar_search(graph, h, firstCity, destination[i])
-        print(path)
-        route = detailToSimple(path)
-        routes.append(route)
-        firstCity = destination[i]
-        print(getCost(path))
+    #     # Run the search algorithm
+    #     path = astar_search(graph, h, firstCity, destination[i])
+    #     print(path)
+    #     route = detailToSimple(path)
+    #     routes.append(route)
+    #     firstCity = destination[i]
+    #     print(getCost(path))
 
     # Visualize the route for every salesman
-    input("hallo: ")
-    VisualizeComplexGraph(1, streets, routes, maps, len(maps), destination)
+    # VisualizeComplexGraph(1, streets, routes, maps, len(maps), destination)
 
 # Tell python to run main method
 if __name__ == "__main__": main()
