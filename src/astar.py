@@ -1,5 +1,5 @@
 # astar.py
-# A* Algorithm for Pathfinding
+# A* Algorithm for Pathfinding (Modified)
 # Reference : https://www.annytab.com/a-star-search-algorithm-in-python/
 
 from graph import *
@@ -11,8 +11,8 @@ from visualizer import *
 def heuristics(cities, destination):
     h = {}
     for i in range(len(cities)):
-        g = cities.get(str(i+1)).distanceTo(destination)
-        h.update({str(i+1):g})
+        g = cities.get(str(i)).distanceTo(destination)
+        h.update({str(i):g})
     return h
 
 # A* search
@@ -44,9 +44,9 @@ def astar_search(graph, heuristics, start, end):
         if current_node == goal_node:
             path = []
             while current_node != start_node:
-                path.append(current_node.name + ': ' + str(current_node.g))
+                path.append([current_node.name, current_node.g])
                 current_node = current_node.parent
-            path.append(start_node.name + ': ' + str(start_node.g))
+            path.append([start_node.name, start_node.g])
             # Return reversed path
             return path[::-1]
 
@@ -87,15 +87,18 @@ def add_to_open(open, neighbor):
 def detailToSimple(path):
     route = []
     for i in range(len(path)):
-        x = path[i].split(':')
-        route.append(int(x[0]))
+        route.append(path[i][0])
     return route
+
+# Return the cost of the path
+def getCost(path):
+    return path[-1][1]
 
 # The main entry point for this module
 def main():
     # Quick test for quick debugging
-    fileNode = "MTSPNode.txt"
-    fileEdge = "MTSPEdge.txt"
+    fileNode = "OL.cnode.txt"
+    fileEdge = "OL.cedge.txt"
 
     maps = LoadCoordinate(fileNode)
     streets = LoadStreet(fileEdge)
@@ -109,18 +112,28 @@ def main():
     # Make graph undirected, create symmetric connections
     graph.make_undirected()
 
-    # Create heuristics (straight-line distance, air-travel distance)
-    h = {}
-    h = heuristics(maps, maps.get('4'))
+    routes = []
+    firstCity = '1'
+    destination = [str(i*10 + random.randint(0,20)) for i in range(5)]
+    destination.append(firstCity)
+    print(destination)
+    input()
+    for i in range(5):
+        # Create heuristics (straight-line distance, air-travel distance)
+        h = {}
+        h = heuristics(maps, maps.get(destination[i]))
 
-    # Run the search algorithm
-    path = astar_search(graph, h, '1', '8')
-    print(path)
-    route = detailToSimple(path)
-    print()
+        # Run the search algorithm
+        path = astar_search(graph, h, firstCity, destination[i])
+        print(path)
+        route = detailToSimple(path)
+        routes.append(route)
+        firstCity = destination[i]
+        print(getCost(path))
 
     # Visualize the route for every salesman
-    VisualizeComplexGraph(1, streets, [route], maps, len(maps))
+    input("hallo: ")
+    VisualizeComplexGraph(1, streets, routes, maps, len(maps), destination)
 
 # Tell python to run main method
 if __name__ == "__main__": main()

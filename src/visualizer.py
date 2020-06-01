@@ -26,10 +26,15 @@ def Plotting(P, name, k):
     elif (k == 2):
         plt.plot([x], [y], 'ro', color = "blue")
 
+    # If Point P is the visited city
+    elif (k == 3):
+        plt.plot([x], [y], 'ro', color = "purple")
+
     # If Point P is the unvisited city
     else :
         plt.plot([x], [y], 'ro', color = "black")
-    label = "%d(%d,%d)" % (name, x, y)
+    # label = "%d(%d,%d)" % (name, x, y)
+    label = "%d" % (name)
     plt.annotate(label, (x,y), textcoords="offset points", xytext=(0,10), ha='center')
 
 # Connect two points between origin point and destination point
@@ -43,7 +48,7 @@ def ConnectPoints(maps, origin, destination, cost, flag):
     
     # The edge between origin and destination is not on the route
     else:
-        plt.plot([x1,x2],[y1,y2],'k-', color = "yellow")
+        plt.plot([x1,x2],[y1,y2],'k-', color = "black")
 
 # Connect two points
 def ConnectPointsRandomColor(maps, origin, destination, cost, k, colors):
@@ -67,7 +72,7 @@ def generateRandomColor(numOfRoute):
     return colors
 
 # Visualize the graph from street, route, and length of the map information for Multiple TSP Problem
-def VisualizeComplexGraph(basecity, streets, listOfRoute, maps, length):
+def VisualizeComplexGraph(basecity, streets, listOfRoute, maps, length, destination):
     colors = generateRandomColor(len(listOfRoute))
     # Visualize every street in the map
     for street in streets:
@@ -84,7 +89,7 @@ def VisualizeComplexGraph(basecity, streets, listOfRoute, maps, length):
 
     # Visualize every city in the map with black color
     for city in maps:
-        Plotting(maps[city], float(city), 3)
+        Plotting(maps[city], float(city), 4)
 
     # Visualize every city in the route with another color
     for route in listOfRoute:
@@ -92,9 +97,14 @@ def VisualizeComplexGraph(basecity, streets, listOfRoute, maps, length):
             P = maps[str(city)]
             Plotting(P, city, 2)
 
+    # Visualize every city in the destination with another color
+    for city in destination:
+        P = maps[str(city)]
+        Plotting(P, city, 3)
+
     # Visualize origin city with green color
-    P = maps[str(basecity+1)]
-    Plotting(P, basecity+1, 1)
+    P = maps[str(basecity)]
+    Plotting(P, basecity, 1)
 
     # Create legend information based on the number of salesman
     personLegend = []

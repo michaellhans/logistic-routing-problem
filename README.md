@@ -38,27 +38,72 @@ Pastikan ada menambahkan/menggati README ini saat mengumpulkan. README minimal m
 
 Anda bebas menggunakan pustaka maupun referensi apapun untuk mengerjakan tugas, kecuali kode/pustaka jadi yang melakukan *routing*, karena tujuan tugas adalah membuat sebuah prototipe pembuatan rute. Pastikan anda mencantumkan sumber bilamana anda menggunakan kode dari orang lain. Akan tetapi, pemahaman terhadap solusi masalah menjadi bagian penting dari penilaian , sehingga anda disarankan untuk menuliskan kode anda sendiri.<br>
 
-## Penilaian
-Nilai maksimal non-bonus adalah **4200**. Penilaian akan dilakukan berdasarkan : 
-1. kode sumber,
-2. pendekatan solusi, 
-2. demo aplikasi dan ,
-3. pemahaman terhadap solusi masalah.
+## Getting Started
+Instruksi-instruksi berikut ini akan membimbing Anda dalam tahap instalasi aplikasi dan cara menjalankannya.
 
-Untuk poin (1) dan poin (2) , nilai maksimal adalah **3600** dari ketiga milestone.<br> 
-Demo hanya dapat dilakukan sekali. Demo bernilai **600** poin. Pada demo, anda akan menunjukkan hasil aplikasi dan akan terdapat tanya jawab untuk menguji pemahaman.<br>
-Asisten juga akan menjalankan **plagiarism checking** antar kode sumber peserta. Bila ditemukan adanya kecurangan, maka nilai peserta bersangkutan adalah 0 tanpa pengubahan, dan pengurangan poin maksimal tidak akan berlaku. Perhatikan bahwa selama anda mencantumkan asal kode yang anda salin , tidak menggunakan pustaka untuk *routing* dan tidak menyalin kode milik teman anda, anda tidak akan mendapat masalah.
+### Prerequisites
+Berikut ini adalah persiapan environment yang dibutuhkan untuk menjalankan aplikasi.
+```
+- Python 3.x.x untuk bahasa pemrograman aplikasi
+- Matplotlib Library untuk visualisasi peta
+- GraphViz Library untuk visualisasi graf sederhana
+```
 
-## Bonus
-Bonus **300** poin diberikan jika anda dapat mengirimkan hasil algoritma beserta beberapa contoh masukan/keluaran untuk kasus kota San Francisco , dengan jumlah jalanan yang lebih besar dari Kota Oldenburg. Dataset dapat diambil di website yang sama.
+### Installing
+Berikut ini adalah langkah-langkah dalam penginstallan aplikasi:
+1. Install library Matplotlib terlebih dahulu menggunakan command sebagai berikut.
+```
+pip install matplotlib
+```
+2. Install library GraphViz terlebih dahulu menggunakan command sebagai berikut.
+```
+pip install graphviz
+```
+3. Semua prerequisites sudah disiapkan dengan baik.
 
-## Kontak
-Silahkan hubungi asisten lewat line @alamhasabiebaru atau lewat email 13517096@std.stei.itb.ac.id dengan subjek diawal tulisan \[SELEKSI IRK\] . *Note : waktu menjawab bervariasi, namun email biasanya akan dibalas kurang dari sehari. Line mungkin tidak dibalas dalam waktu satu-dua hari. Mohon bersabar :)*. Pertanyaan juga dipersilahkan. Jawaban akan diposting dalam bagian QnA README ini.
+## How to Run Program
+Untuk menjalankan program, pastikan command sudah berada dalam directory `./src`, lalu jalankan command sebagai berikut.
+```
+python mtsp.py
+```
 
-## QnA
-Masih kosong :).
+## Guideline: How to Use
+1. Masukkan nama file yang berisi daftar koordinat setiap kota. Untuk setiap koordinat kota, digunakan format berupa 
+```
+ID XPosition YPosition
+```
+Berikut ini adalah contoh daftar koordinat kota pada FileNode.txt
+```
+1 200 300
+2 300 400
+3 100 50
+```
+2. Masukkan nama file untuk setiap sisi atau jalan yang menghubungkan antar kota.
+```
+IDEdge IDAsal IDTujuan Jarak
+```
+Berikut ini adalah contoh daftar jalan penghubung antar kota pada FileEdge.txt
+```
+1 1 2 80
+2 1 3 200
+3 2 3 150
+```
+Pastikan bahwa setiap jalan pada FileEdge.txt menghubungkan kota-kota yang bersesuaian dengan daftar kota pada FileNode.txt
 
-## Referensi
+3. Masukkan jumlah salesman yang diinginkan. Pastikan jumlah salesman tidak melebihi banyaknya kota.
+4. Masukkan kota asal (origin city).
+5. Aplikasi akan memproses masukkan pengguna untuk diolah menjadi kumpulan rute terpendek.
+6. Aplikasi akan menampilkan visualisasi peta dan rute-rute yang dilewati oleh setiap salesman.
+
+## Checklist Milestone Pengerjaan
+- [X] Milestone 1 : Pembacaan File dan Representasi Graf dalam Matrix
+- [X] Milestone 2 : Mengembalikan Solusi Multiple TSP
+- [X] Milestone 3 : Visualisasi Rute olusi Multiple TSP
+
+## Built With
+* [Python](https://www.python.org/) - Back End dari Aplikasi
+
+## Referensi Awal Pengerjaan Tugas
 Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:<br>
 [1] Dataset : https://www.cs.utah.edu/~lifeifei/SpatialDataset.htm<br>
 [2] Pengenalan dan formulasi mTSP : https://neos-guide.org/content/multiple-traveling-salesman-problem-mtsp<br>
@@ -66,8 +111,24 @@ Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:<br>
 [4] OpenGL untuk Python : https://stackabuse.com/brief-introduction-to-opengl-in-python-with-pyopengl/<br>
 [5]  Li, Feifei, Dihan Cheng, Marios Hadjieleftheriou, George Kollios, and Shang-Hua Teng. "On trip planning queries in spatial databases." In International symposium on spatial and temporal databases, pp. 273-290. Springer, Berlin, Heidelberg, 2005.
 
+## Referensi Formulasi Multiple TSP
+[1] Solving Multiple TSP Problem by K-Means and Crossover based Modified ACO Algorithm : https://www.ijert.org/research/solving-multiple-tsp-problem-by-k-means-and-crossover-based-modified-aco-algorithm-IJERTV5IS020474.pdf
+[2] Vehicle Routing Problem : https://developers.google.com/optimization/routing/vrp
+[3] Amazing Collection Vehicle Routing Problem : https://github.com/ashishpatel26/Amazing-Collection-Vehicle-Routing-Problem
+[4] Vehicle Routing Problem : https://github.com/jwang0306/vehicle-routing-problem
+[5] An Ant Colony Optimization Algorithm for
+Multiple Travelling Salesman Problem : https://www2.cs.siu.edu/~rahimi/shared/TSM/01691778.pdf
+[6] Dijkstra Algorithm for Pathfinding : https://informatika.stei.itb.ac.id/~rinaldi.munir/Stmik/2019-2020/Algoritma-Greedy-(2020).pdf
+[7] A* Algorithm for Pathfinding : https://www.annytab.com/a-star-search-algorithm-in-python/
+
 ## Credits
 Thank you for Li Fei Fei et. al. for providing the data.
 
-## Final Words
-Akhir Kata, selamat bersenang-senang ! It's not worth it if you're not having fun.
+## Catatan
+Pencarian rute untuk setiap agen mungkin tidak menghasilkan solusi atau rute yang optimal mengingat pembagian tugas kota-kota dilakukan secara acak.
+
+## Author
+**13518056 - Michael Hans** - *Designer, Programmer, and Tester*
+
+## Acknowledgements
+* Asisten IRK, Nur Alam Hasabie
