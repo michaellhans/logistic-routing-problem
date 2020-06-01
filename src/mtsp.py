@@ -99,74 +99,74 @@ def PrintAllSolution(solution, numOfSalesman):
 
     print ("Jarak tempuh total setiap salesman adalah "+str(totalDistance)+" km.")
 
-# Main Program or Driver for Multiple TSP with Ant-Colony Optimization
-maps = {}
-isSuccess = False
-while (not(isSuccess)):
-    try:
-        fileNode = input("Masukkan nama file koordinat\t: ")
-        fileEdge = input("Masukkan nama file jalanan\t: ")
-        maps = LoadCoordinate(fileNode)
-        streets = LoadStreet(fileEdge)
-        numOfCities = len(maps)
-        isSuccess = True
-    except IndexError:
-        print("Terjadi kesalahan dalam pembacaan file!")
-        print("Harap masukkan file yang valid dengan format yang benar.")
-    except FileNotFoundError:
-        print("File tidak ditemukan!")
+# # Main Program or Driver for Multiple TSP with Ant-Colony Optimization
+# maps = {}
+# isSuccess = False
+# while (not(isSuccess)):
+#     try:
+#         fileNode = input("Masukkan nama file koordinat\t: ")
+#         fileEdge = input("Masukkan nama file jalanan\t: ")
+#         maps = LoadCoordinate(fileNode)
+#         streets = LoadStreet(fileEdge)
+#         numOfCities = len(maps)
+#         isSuccess = True
+#     except IndexError:
+#         print("Terjadi kesalahan dalam pembacaan file!")
+#         print("Harap masukkan file yang valid dengan format yang benar.")
+#     except FileNotFoundError:
+#         print("File tidak ditemukan!")
 
-numOfSalesman = int(input("Masukkan jumlah salesman\t: "))
-originCity = int(input("Masukkan kota depot / asal\t: "))
-# Quick test for quick debugging
-# fileNode = "MTSPNode2.txt"
-# fileEdge = "MTSPEdge2.txt"
-# numOfSalesman = 2
-# originCity = 1
-# maps = LoadCoordinate(fileNode)
-# streets = LoadStreet(fileEdge)
+# numOfSalesman = int(input("Masukkan jumlah salesman\t: "))
+# originCity = int(input("Masukkan kota depot / asal\t: "))
+# # Quick test for quick debugging
+# # fileNode = "MTSPNode2.txt"
+# # fileEdge = "MTSPEdge2.txt"
+# # numOfSalesman = 2
+# # originCity = 1
+# # maps = LoadCoordinate(fileNode)
+# # streets = LoadStreet(fileEdge)
 
-# Print all information about maps coordinate and streets
-PrintCoordinateInfo(maps)
-PrintStreetInfo(streets)
+# # Print all information about maps coordinate and streets
+# PrintCoordinateInfo(maps)
+# PrintStreetInfo(streets)
 
-# Visualize the initial Map
-VisualizeComplexGraph(0, streets, [], maps, numOfCities)
+# # Visualize the initial Map
+# VisualizeComplexGraph(0, streets, [], maps, numOfCities)
 
-# Create distance matrix based on the streets information
-MBase = ConvertStreetsIntoGraph(streets, numOfCities)
-PrintMatrix(MBase, numOfCities)
+# # Create distance matrix based on the streets information
+# MBase = ConvertStreetsIntoGraph(streets, numOfCities)
+# PrintMatrix(MBase, numOfCities)
 
-# Execute ten iterations to get the best route for all salesman
-for j in range(10):
-    ListOfMSub = []
-    ListOfSubCities = []
-    ListOfSubCities = CitiesIntoSubCities(numOfCities, numOfSalesman, originCity)
-    print(ListOfSubCities)
-    ListOfMSub = CreateAllSubGraphs(MBase, ListOfSubCities, numOfCities)
-    routes = []
-    solution = []
+# # Execute ten iterations to get the best route for all salesman
+# for j in range(10):
+#     ListOfMSub = []
+#     ListOfSubCities = []
+#     ListOfSubCities = CitiesIntoSubCities(numOfCities, numOfSalesman, originCity)
+#     print(ListOfSubCities)
+#     ListOfMSub = CreateAllSubGraphs(MBase, ListOfSubCities, numOfCities)
+#     routes = []
+#     solution = []
 
-    # Execute numOfSalesman TSP process and return numOfSalesman route
-    for i in range(numOfSalesman):
-        ant_colony = AntColony(np.array(ListOfMSub[i]), 1, 1, 100, 0.95, alpha=1, beta=1)
-        shortest_path = ant_colony.run()
-        print ("Shortest path: {}".format(shortest_path))
-        if (shortest_path[0] != 'placeholder'):
-            routeParent = ConvertIntoRoute(shortest_path)
-            ValidizeRoute(routeParent, ListOfSubCities[i])
-            print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(shortest_path[1])+" km")
-            print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
-            PrintRoute(routeParent)
-            routes.append(routeParent)
-            solution.append([routeParent, shortest_path[1]])
-        else:
-            print("Tidak terdapat rute yang memungkinkan untuk sales ke-"+str(i+1))
-            solution.append([[0], -999])
-        input()
+#     # Execute numOfSalesman TSP process and return numOfSalesman route
+#     for i in range(numOfSalesman):
+#         ant_colony = AntColony(np.array(ListOfMSub[i]), 1, 1, 100, 0.95, alpha=1, beta=1)
+#         shortest_path = ant_colony.run()
+#         print ("Shortest path: {}".format(shortest_path))
+#         if (shortest_path[0] != 'placeholder'):
+#             routeParent = ConvertIntoRoute(shortest_path)
+#             ValidizeRoute(routeParent, ListOfSubCities[i])
+#             print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(shortest_path[1])+" km")
+#             print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
+#             PrintRoute(routeParent)
+#             routes.append(routeParent)
+#             solution.append([routeParent, shortest_path[1]])
+#         else:
+#             print("Tidak terdapat rute yang memungkinkan untuk sales ke-"+str(i+1))
+#             solution.append([[0], -999])
+#         input()
 
-    # Print all solution route for every salesman and their total distance
-    PrintAllSolution(solution, numOfSalesman)
+#     # Print all solution route for every salesman and their total distance
+#     PrintAllSolution(solution, numOfSalesman)
 
-    # Visualize the route for every salesman
-    VisualizeComplexGraph(shortest_path[0][0][0], streets, routes, maps, numOfCities)
+#     # Visualize the route for every salesman
+#     VisualizeComplexGraph(shortest_path[0][0][0], streets, routes, maps, numOfCities)

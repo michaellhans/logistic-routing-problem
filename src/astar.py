@@ -6,6 +6,8 @@ from graph import *
 from node import *
 from loader import *
 from visualizer import *
+from ant_colony import *
+from mtsp import *
 
 # Calculate heuristic value : distance from every city to destination city
 def heuristics(cities, destination):
@@ -87,7 +89,7 @@ def add_to_open(open, neighbor):
 def detailToSimple(path):
     route = []
     for i in range(len(path)):
-        route.append(path[i][0])
+        route.append(int(path[i][0]))
     return route
 
 # Return the cost of the path
@@ -95,6 +97,7 @@ def getCost(path):
     return path[-1][1]
 
 # Generate distance matrix based on distance of the A* path
+# Milestone 1 : Get Complete Graph of all depot and station
 def generateAStarParameter(destination, maps, graph):
     heuristicList = []
     for i in range(len(destination)):
@@ -103,7 +106,7 @@ def generateAStarParameter(destination, maps, graph):
         heuristicList.append(h)
 
     distance = [[np.inf for j in range(len(destination))] for i in range(len(destination))]
-    routes = [[None for j in range(len(destination))] for i in range(len(destination))]
+    routes = [['placeholder' for j in range(len(destination))] for i in range(len(destination))]
     for i in range(len(destination)):
         for j in range(len(destination)):
             if (i != j):
@@ -116,6 +119,24 @@ def generateAStarParameter(destination, maps, graph):
 
     return distance, routes
 
+# Convert from simple route from A* Matrix into the real route from the maps
+def simple_into_real_route(trail, routes):
+    realPath = []
+    originCity = trail[0]
+    realOriginCity = routes[int(originCity)][1][0]
+    for i in range(len(trail)-1):
+        realPath = realPath + routes[int(originCity)][int(trail[i+1])]
+        realPath.pop()
+        originCity = trail[i+1]
+    realPath.append(realOriginCity)
+    return realPath
+
+# Generate all salesman real route : convert every simple route into real route
+def generate_all_salesman_real_route(all_trail, routes):
+    all_realPath = []
+    for i in range(len(all_trail)):
+        all_realPath.append(simple_into_real_route(all_trail[0], routes))
+    return all_realPath
 
 # The main entry point for this module
 def main():
@@ -137,6 +158,7 @@ def main():
 
     routes = []
     destination = [str(i*10 + random.randint(0,20)) for i in range(6)]
+    destinationInt = [int(destination[i]) for i in range(6)]
     firstCity = destination[1]
     print(destination)
     input()
@@ -154,9 +176,34 @@ def main():
     #     routes.append(route)
     #     firstCity = destination[i]
     #     print(getCost(path))
+    print(MRoute)
 
+    routes = []
+    solution = []
+
+    # Execute numOfSalesman TSP process and return numOfSalesman route
+    for i in range(1):
+        ant_colony = AntColony(np.array(MCost), 10, 5, 100, 0.95, alpha=1, beta=1)
+        shortest_path = ant_colony.run()
+        print ("Shortest path: {}".format(shortest_path))
+        if (shortest_path[0] != 'placeholder'):
+            routeParent = ConvertIntoRoute(shortest_path)
+            # ValidizeRoute(routeParent, destination)
+            print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(shortest_path[1])+" km")
+            print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
+            PrintRoute(routeParent)
+            routes.append(routeParent)
+            solution.append([routeParent, shortest_path[1]])
+        else:
+            print("Tidak terdapat rute yang memungkinkan untuk sales ke-"+str(i+1))
+            solution.append([[0], -999])
+        input()
+
+    all_real_path = generate_all_salesman_real_route(routes, MRoute)
+    print(all_real_path)
+    input("Next.. to visualizer")
     # Visualize the route for every salesman
-    # VisualizeComplexGraph(1, streets, routes, maps, len(maps), destination)
+    VisualizeComplexGraph(1, streets, all_real_path, maps, len(maps), destinationInt)
 
 # Tell python to run main method
 if __name__ == "__main__": main()
