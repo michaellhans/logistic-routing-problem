@@ -3,8 +3,7 @@
 # Using reduced cost matrix
 
 from graph import *
-from visualizer import *
-from complexVisualizer import *
+from simpleVisualizer import *
 
 # function CopyMatriks (input A: Matriks) -> Matriks
 # Mengembalikan matriks yang merupakan hasil salinan dari matriks A

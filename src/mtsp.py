@@ -1,131 +1,169 @@
-# mtsp.py
-# Contain all procedure and function to execute multiple TSP
-# Basic : Reduced cost matrix TSP
+# acoMTSP.py
+# Calculate mTSP route with ant colony optimization
 
-from tsp import *
+from graph import *
+from visualizer import *
+from ant_colony import *
+import more_itertools as mit
+import random
 
 # Crosscheck if the city of i has already visited
-def ApplyVisitedCity(QueueRoute, i, length, visitedCities, person):
-    visitedCities[i] = 1
-    for m in range(len(QueueRoute)):
-        if (m != person):
-            for k in range(length):
-                QueueRoute[m][0][1][i][k] = -999
-                QueueRoute[m][0][1][k][i] = -999 
+def ApplyVisitedCity(M, numOfCities, i):
+    for k in range(numOfCities):
+        M[i][k] = np.inf
+        M[k][i] = np.inf 
 
-def IsAllVisitedV2(visitedCities):
-    for node in visitedCities:
-        if (node == 0):
-            return False
-    return True
+# Convert from List of Path based on Matrix into the real route
+def ConvertIntoRoute(listOfPath):
+    route = []
+    startcity = listOfPath[0][0][0]
+    route.append(startcity)
+    for path in listOfPath[0]:
+        route.append(path[1])
+    return route
 
-# Driver for TSP
+# Create a subgraph of G based on subCities
+def SubGraph(G, subCities, totalCities):
+    allCities = [i+1 for i in range(totalCities)]
+    print(allCities)
+    for i in range(len(subCities)):
+        allCities.remove(subCities[i])
+    print(allCities)
+    SubG = []
+    subCities.sort()
+    print(subCities)
+    i = 0
+    while (i < totalCities):
+        if (i+1 not in allCities):
+            Row = []
+            j = 0
+            while (j < totalCities):
+                print(i,",",j,"->",G[i][j])
+                if (j+1 not in allCities):
+                    Row.append(G[i][j])
+                j += 1
+            SubG.append(Row)
+        i += 1
+    PrintMatrix(SubG, len(subCities))
+    return SubG
+
+# Create all sub graphs according to list of sub cities
+def CreateAllSubGraphs(G, listOfSubCities, numOfCities):
+    TotalMaps = []
+    for i in range(len(listOfSubCities)):
+        TotalMaps.append(SubGraph(G, listOfSubCities[i], numOfCities))
+    return TotalMaps
+
+# Divide a graph into numOfSalesman subgraph
+def CitiesIntoSubCities(numOfCity, numOfSalesman, originCity):
+    cities = []
+    for i in range(numOfCity):
+        cities.append(int(i+1))
+    print(cities)
+    random.shuffle(cities)
+    print(cities)
+    cities.remove(originCity)
+    partition = [list(c) for c in mit.divide(numOfSalesman, cities)]
+    listOfSubCities = []
+    for i in range(numOfSalesman):
+        listOfSubCities.append([originCity])
+        listOfSubCities[i] = listOfSubCities[i] + partition[i]
+    return listOfSubCities 
+
+# Validize the route into the real route
+def ValidizeRoute(rawRoute, subcities):
+    for i in range(len(rawRoute)):
+        rawRoute[i] = subcities[rawRoute[i]]
+
+# Print the real route
+def PrintRoute(route):
+    for i in range (len(route)-1):
+        print(route[i],"->", end=" ")
+    print(route[len(route)-1])
+
+# Milestone 2 : Print all every route solution
+# Print the route solution and its distance length
+def PrintAllSolution(solution, numOfSalesman):
+    totalDistance = 0
+    for i in range(numOfSalesman):
+        print(str(i+1)+". Perjalanan sales ke-"+str(i+1)+": ")
+        if (solution[i][1] == -999):
+            print("Tidak terdapat rute yang memungkinkan untuk sales ke-"+str(i+1))
+        else:
+            print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(solution[i][1])+" km.")
+            print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
+            PrintRoute(routeParent)
+            print()
+            totalDistance += solution[i][1]
+
+    print ("Jarak tempuh total setiap salesman adalah "+str(totalDistance)+" km.")
+
+# Main Program or Driver for Multiple TSP with Ant-Colony Optimization
 maps = {}
-fileNode = input("Masukkan nama file koordinat  : ")
-fileEdge = input("Masukkan nama file jalanan    : ")
-numOfPerson = int(input("Masukkan banyaknya salesman    : "))
-maps = LoadCoordinate(fileNode)
-streets = LoadStreet(fileEdge)
+isSuccess = False
+while (not(isSuccess)):
+    try:
+        fileNode = input("Masukkan nama file koordinat\t: ")
+        fileEdge = input("Masukkan nama file jalanan\t: ")
+        maps = LoadCoordinate(fileNode)
+        streets = LoadStreet(fileEdge)
+        numOfCities = len(maps)
+        isSuccess = True
+    except IndexError:
+        print("Terjadi kesalahan dalam pembacaan file!")
+        print("Harap masukkan file yang valid dengan format yang benar.")
+    except FileNotFoundError:
+        print("File tidak ditemukan!")
+
+numOfSalesman = int(input("Masukkan jumlah salesman\t: "))
+originCity = int(input("Masukkan kota depot / asal\t: "))
+# Quick test for quick debugging
+# fileNode = "MTSPNode2.txt"
+# fileEdge = "MTSPEdge2.txt"
+# numOfSalesman = 2
+# originCity = 1
+
+# Print all information about maps coordinate and streets
 PrintCoordinateInfo(maps)
 PrintStreetInfo(streets)
-length = len(maps)
-visitedCities = [0 for i in range (length)]
 
-# # Visualize the Map
-# VisualizeComplexGraph(0, streets, [], maps, length)
+# Visualize the initial Map
+VisualizeComplexGraph(0, streets, [], maps, numOfCities)
 
-graphMatrix = ConvertStreetsIntoGraph(streets, length)
-PrintMatrix(graphMatrix, length)
+# Create distance matrix based on the streets information
+MBase = ConvertStreetsIntoGraph(streets, numOfCities)
+PrintMatrix(MBase, numOfCities)
 
-MBase, rootcost = GetReducedMatrix(graphMatrix, length)
-MRoot = CopyMatriks(MBase, length)
-PrintMatrix(MBase, length)
-print("Reduced root cost =", rootcost)
-print("Start here")
-input()
+# Execute ten iterations to get the best route for all salesman
+for j in range(10):
+    ListOfMSub = []
+    ListOfSubCities = []
+    ListOfSubCities = CitiesIntoSubCities(numOfCities, numOfSalesman, originCity)
+    print(ListOfSubCities)
+    ListOfMSub = CreateAllSubGraphs(MBase, ListOfSubCities, numOfCities)
+    routes = []
+    solution = []
 
-QueueRoute = [[] for i in range(numOfPerson)]
-DeadEnd = []
-BaseCity = 0
-visitedCities[BaseCity] = 1
-routeParent = [BaseCity]
-count = 0
-for i in range(numOfPerson):
-    QueueRoute[i].append([rootcost, MBase, count, routeParent])
-for i in range(numOfPerson):
-    DeadEnd.append(0)
-lastVisit = 0
-
-while (not(IsAllVisitedV2(visitedCities))):
-    penalty = 0
-    for i in range(numOfPerson):
-        print("Orang ke-"+str(i+1))
-        if (not(DeadEnd[i])):
-            if (len(QueueRoute[i]) == 0):
-                print("Rute perjalanan bolak-balik tidak ditemukan!")
-                DeadEnd[i] = 1
-                break
-
-            if (lastVisit > 0):
-                ApplyVisitedCity(QueueRoute, lastVisit, length, visitedCities, (i-1) % numOfPerson)
-
-            nextState = QueueRoute[i].pop(0)
-            MBase = nextState[1]
-            StartingCity = nextState[3][-1]
-            routeParent = nextState[3]
-            rootcost = nextState[0]
-
-            for j in range(length):
-                route = []
-                route = route + routeParent
-                if ((MBase[StartingCity][j] != -999) and (visitedCities[j] != 1)):
-                    count += 1
-                    temp = MBase[StartingCity][j]
-                    print("Simpul",count,":",StartingCity, "->", j)
-                    PrintMatrix(MBase, length)
-                    M, cost = CalculateCost(MBase, length, StartingCity, j, BaseCity)
-                    PrintMatrix(M, length)
-                    finalcost = rootcost + temp + cost
-                    print("Reduced total cost = "+str(rootcost)+" + "+"M["+str(StartingCity)+","+str(j)+"] + "+str(cost)+" = "+str(finalcost))
-                    route.append(j)
-                    print("Route for node",count,"==>",end=" ")
-                    PrintRoute(route)
-                    QueueRoute[i].append([finalcost, M, count, route])
-                    input()
-
-            QueueRoute[i].sort()
-            lastVisit = QueueRoute[i][0][3][-1]
-
+    # Execute numOfSalesman TSP process and return numOfSalesman route
+    for i in range(numOfSalesman):
+        ant_colony = AntColony(np.array(ListOfMSub[i]), 1, 1, 100, 0.95, alpha=1, beta=1)
+        shortest_path = ant_colony.run()
+        print ("Shortest path: {}".format(shortest_path))
+        if (shortest_path[0] != 'placeholder'):
+            routeParent = ConvertIntoRoute(shortest_path)
+            ValidizeRoute(routeParent, ListOfSubCities[i])
+            print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(shortest_path[1])+" km")
+            print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
+            PrintRoute(routeParent)
+            routes.append(routeParent)
+            solution.append([routeParent, shortest_path[1]])
         else:
-            penalty += 1
-    if (penalty == numOfPerson):
-        print("Newman, you're done!")
-        break
-    for i in range(numOfPerson):
-        PrintRoute(QueueRoute[i][0][3])
+            print("Tidak terdapat rute yang memungkinkan untuk sales ke-"+str(i+1))
+            solution.append([[0], -999])
+        input()
 
-if (IsAllVisited):
-    print("Rute telah ditemukan!")
-    listOfRoute = []
-    totalCost = 0
-    for i in range(numOfPerson):
-        print(str(i+1)+" Rute Sales ke-"+str(i+1))
-        result = QueueRoute[i][0]
-        if (IsStreetAvailable(result[3][-1], BaseCity, MRoot)):
-            result[3].append(BaseCity)
-            print("Rute perjalanan memenuhi Traveling Salesperson Problem!")
-            costPerson = result[0]
-        else:
-            print("Rute perjalanan tidak kembali ke tempat asal!")
-            costPerson = CalculateRouteCost(result[3], MRoot)
-        totalCost += costPerson
-        print("Rute perjalanan orang ke-"+str(i+1)+" adalah ",end=" ")
-        PrintRoute(result[3])
-        print("Jarak tempuh perjalanan =", totalCost, "km")
-        listOfRoute.append(result[3])
-    print("Total jarak tempuh setiap salesman adalah", totalCost, "km")
-else:
-    print("Tidak ada rute perjalanan terpendek TSP yang tersedia!")
+    # Print all solution route for every salesman and their total distance
+    PrintAllSolution(solution, numOfSalesman)
 
-# VisualizeGraphMTSP(streets, routeParent, length, fileNode)
-VisualizeComplexGraphMTSP(BaseCity, streets, listOfRoute, maps, length)
+    # Visualize the route for every salesman
+    VisualizeComplexGraph(shortest_path[0][0][0], streets, routes, maps, numOfCities)
