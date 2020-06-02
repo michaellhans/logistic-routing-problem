@@ -8,6 +8,13 @@ from astar import *
 import more_itertools as mit
 import random
 
+# Create list of destination coordinates
+def CreateListCoordinate(cities, maps):
+    listCoordinate = []
+    for city in cities:
+        listCoordinate.append([city, maps[city]])
+    return listCoordinate
+
 # Crosscheck if the city of i has already visited
 def ApplyVisitedCity(M, numOfCities, i):
     for k in range(numOfCities):
@@ -71,6 +78,24 @@ def CitiesIntoSubCities(numOfCity, numOfSalesman, originCity):
         listOfSubCities[i] = listOfSubCities[i] + partition[i]
     return listOfSubCities 
 
+# Divide a graph into numOfSalesman subgraph
+def splitCities(cities, numOfSalesman, originCity, maps):
+    listCoordinate = CreateListCoordinate(cities, maps)
+    # for coordinate in listCoordinate:
+    #     print(coordinate[0], "->", coordinate[1].printInfo())
+    listCoordinate.sort(key = lambda x : x[1])
+    # print("remove")
+    listCoordinate.remove([originCity, maps[originCity]])
+    # for coordinate in listCoordinate:
+    #     print(coordinate[0], "->", coordinate[1].printInfo())
+    citiesNoOrigin = [listCoordinate[i][0] for i in range(len(listCoordinate))]
+    partition = [list(c) for c in mit.divide(numOfSalesman, citiesNoOrigin)]
+    listOfSubCities = []
+    for i in range(numOfSalesman):
+        listOfSubCities.append([originCity])
+        listOfSubCities[i] = listOfSubCities[i] + partition[i]
+    return listOfSubCities 
+
 # Validize the route into the real route
 def ValidizeRoute(rawRoute, subcities):
     for i in range(len(rawRoute)):
@@ -88,14 +113,11 @@ def PrintAllSolution(solution, numOfSalesman):
     totalDistance = 0
     for i in range(numOfSalesman):
         print(str(i+1)+". Perjalanan sales ke-"+str(i+1)+": ")
-        if (solution[i][1] == -999):
-            print("Tidak terdapat rute yang memungkinkan untuk sales ke-"+str(i+1))
-        else:
-            print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(solution[i][1])+" km.")
-            print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
-            PrintRoute(routeParent)
-            print()
-            totalDistance += solution[i][1]
+        print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(solution[i][1])+" km.")
+        print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
+        PrintRoute(solution[i][0])
+        print()
+        totalDistance += solution[i][1]
 
     print ("Jarak tempuh total setiap salesman adalah "+str(totalDistance)+" km.")
 

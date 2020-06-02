@@ -22,3 +22,10 @@ class Point:
     # Print the information of the point
     def printInfo(self):
         return "(" + str(self.x) + ", " + str(self.y) + ")"
+
+    # Comparison for object of point
+    def __lt__(self, other):
+        if (self.x == other.x):
+            return self.y < other.y
+        else:
+            return self.x < other.x

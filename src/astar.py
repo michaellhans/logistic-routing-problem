@@ -131,21 +131,26 @@ def simple_into_real_route(trail, routes):
     realPath.append(realOriginCity)
     return realPath
 
-# Generate all salesman real route : convert every simple route into real route
-def generate_all_salesman_real_route(all_trail, routes):
-    all_realPath = []
-    for i in range(len(all_trail)):
-        all_realPath.append(simple_into_real_route(all_trail[0], routes))
-    return all_realPath
+# Change correspondent route into True
+def apply_route_on_streets(all_real_path, boolStreets):
+    for i in range(len(all_real_path)):
+        for j in range(len(all_real_path[i])-1):
+            label = str(all_real_path[i][j]) + '-' + str(all_real_path[i][j+1])
+            value = boolStreets.get(label)
+            if (value == None):
+                label = str(all_real_path[i][j+1]) + '-' + str(all_real_path[i][j])
+            boolStreets[label] = i
 
 # The main entry point for this module
 def main():
     # Quick test for quick debugging
     fileNode = "OL.cnode.txt"
     fileEdge = "OL.cedge.txt"
+    numOfSalesman = 2
 
     maps = LoadCoordinate(fileNode)
     streets = LoadStreet(fileEdge)
+    boolStreets = GetBooleanStreets(streets)
 
     # Create a graph
     graph = Graph()
@@ -156,33 +161,25 @@ def main():
     # Make graph undirected, create symmetric connections
     graph.make_undirected()
 
-    routes = []
-    destination = [str(i*10 + random.randint(0,20)) for i in range(6)]
-    destinationInt = [int(destination[i]) for i in range(6)]
-    firstCity = destination[1]
-    print(destination)
-    input()
-    MCost, MRoute = generateAStarParameter(destination, maps, graph)
-    PrintMatrix(MCost, len(destination))
-    # for i in range(5):
-    #     # Create heuristics (straight-line distance, air-travel distance)
-    #     h = {}
-    #     h = heuristics(maps, maps.get(destination[i]))
-
-    #     # Run the search algorithm
-    #     path = astar_search(graph, h, firstCity, destination[i])
-    #     print(path)
-    #     route = detailToSimple(path)
-    #     routes.append(route)
-    #     firstCity = destination[i]
-    #     print(getCost(path))
-    print(MRoute)
-
-    routes = []
+    all_real_path = []
     solution = []
+    destination = [str(2000 + i * 10 + random.randint(0,70)) for i in range(numOfSalesman * 3)]
+    listOfSubDestination = splitCities(destination, numOfSalesman, destination[0], maps)
+    destinationInt = [int(destination[i]) for i in range(numOfSalesman * 3)]
+    
+    print(destination)
 
-    # Execute numOfSalesman TSP process and return numOfSalesman route
-    for i in range(1):
+    input()
+    for i in range(numOfSalesman):
+        MCost = []
+        MRoute = []
+        MCost, MRoute = generateAStarParameter(listOfSubDestination[i], maps, graph)
+        PrintMatrix(MCost, len(listOfSubDestination[i]))
+        print(listOfSubDestination[i])
+        print(MRoute)
+        input()
+
+        # Execute numOfSalesman TSP process and return numOfSalesman route
         ant_colony = AntColony(np.array(MCost), 10, 5, 100, 0.95, alpha=1, beta=1)
         shortest_path = ant_colony.run()
         print ("Shortest path: {}".format(shortest_path))
@@ -192,18 +189,22 @@ def main():
             print("Jarak tempuh untuk sales ke-"+str(i+1)+" adalah "+str(shortest_path[1])+" km")
             print("Rute perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
             PrintRoute(routeParent)
-            routes.append(routeParent)
-            solution.append([routeParent, shortest_path[1]])
+            real_path = simple_into_real_route(routeParent, MRoute)
+            print("Rute asli perjalanan untuk sales ke-"+str(i+1)+" adalah ", end="")
+            PrintRoute(real_path)
+            all_real_path.append(real_path)
+            solution.append([real_path, shortest_path[1]])
         else:
             print("Tidak terdapat rute yang memungkinkan untuk sales ke-"+str(i+1))
             solution.append([[0], -999])
         input()
 
-    all_real_path = generate_all_salesman_real_route(routes, MRoute)
-    print(all_real_path)
+    apply_route_on_streets(all_real_path, boolStreets)
+    PrintAllSolution(solution, numOfSalesman)
     input("Next.. to visualizer")
+
     # Visualize the route for every salesman
-    VisualizeComplexGraph(1, streets, all_real_path, maps, len(maps), destinationInt)
+    VisualizeComplexGraph(destinationInt[0], streets, boolStreets, all_real_path, maps, len(maps), destinationInt)
 
 # Tell python to run main method
 if __name__ == "__main__": main()

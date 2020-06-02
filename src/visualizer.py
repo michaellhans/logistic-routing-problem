@@ -72,15 +72,18 @@ def generateRandomColor(numOfRoute):
     return colors
 
 # Visualize the graph from street, route, and length of the map information for Multiple TSP Problem
-def VisualizeComplexGraph(basecity, streets, listOfRoute, maps, length, destination):
+def VisualizeComplexGraph(basecity, streets, boolStreets, listOfRoute, maps, length, destination):
     colors = generateRandomColor(len(listOfRoute))
     # Visualize every street in the map
     for street in streets:
-        streetRoute = -1
-        for i in range(len(listOfRoute)):
-            if ((CheckStreetInRoute(street[1], street[2], listOfRoute[i])) or (CheckStreetInRoute(street[2], street[1], listOfRoute[i]))):
-                streetRoute = i
-                break
+        # streetRoute = -1
+        # for i in range(len(listOfRoute)):
+        #     if ((CheckStreetInRoute(street[1], street[2], listOfRoute[i])) or (CheckStreetInRoute(street[2], street[1], listOfRoute[i]))):
+        #         streetRoute = i
+        #         break
+        label = street[1] + '-' + street[2]
+        value = boolStreets.get(label)
+        streetRoute = boolStreets[label]
 
         if (streetRoute != -1):
             ConnectPointsRandomColor(maps, street[1], street[2], street[3], streetRoute, colors)

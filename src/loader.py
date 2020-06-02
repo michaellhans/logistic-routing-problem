@@ -65,12 +65,28 @@ def PrintStreetInfo(streets):
         print(edge[0], ":", edge[1], "->", edge[2], "=", edge[3])
     print()
 
+# Get boolean streets, will be used on visualizing
+def GetBooleanStreets(streets):
+    boolStreets = {}
+    for i in range(len(streets)):
+        label = streets[i][1] + '-' + streets[i][2]
+        boolStreets.update({label:-1})
+    return boolStreets
+
+# Test the routed street on boolStreets
+def TestRoutedStreet(boolStreets):
+    for key in boolStreets:
+        if (boolStreets[key] > -1):
+            print(key,"->","HeyTayo!")
+
 # Milestone 1 : Generate graph in matrix
 def Milestone1():
     maps = {}
+    boolStreet = {}
     maps = LoadCoordinate("SthyrelestNode.txt")
     PrintCoordinateInfo(maps)
     streets = LoadStreet("SthyrelestEdge.txt")
     PrintStreetInfo(streets)
     graphMatrix = ConvertStreetsIntoGraph(streets, len(maps))
     PrintMatrix(graphMatrix, len(maps))
+    boolStreets = GetBooleanStreets(streets)
