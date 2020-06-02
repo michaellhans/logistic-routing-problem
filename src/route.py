@@ -50,7 +50,7 @@ def PrintDestination(dest, k):
         print(dest[i]+",",end=" ")
     print(dest[len(dest)-1])
     if (k == 0):
-        print("Cabang pusat logistik berada pada kota "+dest[i])
+        print("Cabang pusat logistik berada pada kota "+dest[0])
     print()
 
 

@@ -1,5 +1,5 @@
 # tester.py
-# Driver to test every module in src folder
+# Driver to test certain module in src folder
 
 from astar import *
 from route import *

@@ -47,20 +47,25 @@ while (numOfSalesman >= numOfCities):
     print("Banyaknya kota adalah",numOfCities, end="\n\n")
     numOfSalesman = int(input("Masukkan jumlah salesman\t: "))
 
+print("Banyaknya kota atau titik\t: "+str(numOfCities))
 print("Metode penentuan depot logistik:")
 print("1. Masukkan pengguna dari file")
-print("2. Random depot factor")
+print("2. Random depot factor untuk banyak kota > 2000")
 choice = int(input("Pilih metode penentuan depot yang diinginkan: "))
-if (choice == 1):
+if ((choice == 1) or (numOfCities < 2000)):
+    if (choice == 2):
+        print("Maaf, random depot factor tidak dapat digunakan apabila banyak kota dibawah 2000.")
     # User-defined station with one origin depot on index 0
-    print("Masukkan ID depot minimal "+str(numOfSalesman*3)+"dan dipisahkan spasi:")
+    print("Masukkan ID depot minimal "+str(numOfSalesman*3)+" dan dipisahkan spasi:")
     depotUser = input()
     destination = depotUser.split(' ')
 else:
     # Generate random station depends on depotFactor with one origin depot on index 0
     print("Masukkan angka sembarang dibawah "+str(numOfCities - 500)+": ",end="")
     depotFactor = int(input())
-    destination = [str(depotFactor + i * 20 + random.randint(0,70)) for i in range(numOfSalesman * 3)]
+    print("Masukkan faktor pengali untuk banyak depot, minimal bernilai 3 : ",end="")
+    depotMultiplier = int(input())
+    destination = [str(depotFactor + i * 20 + random.randint(0,70)) for i in range(numOfSalesman * depotMultiplier)]
 print()
 
 # ==============================================================================================
@@ -154,5 +159,8 @@ input("Click ENTER to proceed to visualizer")
 print()
 
 # Visualize the route for every salesman (Milestone 3)
+print("Berikut ini adalah informasi koordinat setiap depot/stasiun: ")
+PrintCoordinateInfoFromDestination(maps, destination)
 print("Please wait ...")
 VisualizeComplexGraph(destinationInt[0], streets, boolStreets, all_real_path, maps, len(maps), destinationInt)
+print("Sthyrelest Enterprise - Logistic Routing Problem completed!")

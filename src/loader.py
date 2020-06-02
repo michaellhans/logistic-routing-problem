@@ -58,6 +58,13 @@ def PrintCoordinateInfo(maps):
         print(node, "->", maps[node].printInfo())
     print()
 
+# Print each coordinate of the destination from the maps
+def PrintCoordinateInfoFromDestination(maps, destination):
+    print("Depot Coordinate Maps: ")
+    for city in destination:
+        print(city, "->", maps[city].printInfo())
+    print()
+
 # Print each street info and its distance from the streets
 def PrintStreetInfo(streets):
     print("Streets of the Maps: ")

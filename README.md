@@ -52,7 +52,7 @@ Masalah Logistic Routing Problem dibagi menjadi 2 bagian, yaitu:
 
   Kecenderungan memilih jalan dengan pheromone terbanyak dapat direpresentasikan sebagai probabilitas dalam memilih jalan. Setiap kembalinya semut, maka terdapat zat pheromone yang ditinggalkan yang dapat mengalami evaporasi. Semakin sering suatu jalan dipilih, maka zat pheromone pada jalan tersebut semakin tinggi. Begitupula sebaliknya. Akhirnya, probabilitas pemilihan bergantung pada jarak tempuh suatu rute. Algoritma ini diterapkan dalam penyelesaian Travelling Salesperson problem.
 
-  ![Ant-Colony-Optimization]("assets/ACO Formula.png")
+  ![Ant-Colony-Optimization](assets/ACO-Formula.png)
 
 ### Teknik mTSP yang diterapkan
   Penyelesaian mTSP dilakukan dengan membagi m salesperson ke dalam m tur sedemikian rupa sehingga diperoleh bobot total sedikit mungkin. Pendekatan yang digunakan dalam penyelesaian mTSP adalah dengan membagi daerah-daerah tur untuk setiap salesman yang tersedia. Bila terdapat m salesman, maka terdapat m pembagian daerah. Pembagian daerah ini didasarkan pada posisi dan koordinat setiap titik atau kota. Mengingat Logistic Routing Problem menyediakan informasi koordinat, maka kita bisa memanfaatkan koordinat-koordinat tersebut sebagai teknik pembagian daerah mTSP.
@@ -92,7 +92,7 @@ import matplotlib.pyplot as plt
 ## How to Run Program
 Untuk menjalankan program, pastikan command sudah berada dalam directory `./src`, lalu jalankan command sebagai berikut.
 ```
-python mtsp.py
+python main.py
 ```
 
 ## Guideline: How to Use
@@ -102,9 +102,9 @@ ID XPosition YPosition
 ```
 Berikut ini adalah contoh daftar koordinat kota pada FileNode.txt
 ```
-1 200 300
-2 300 400
-3 100 50
+0 200 300
+1 300 400
+2 100 50
 ```
 2. Masukkan nama file untuk setiap sisi atau jalan yang menghubungkan antar kota.
 ```
@@ -112,16 +112,18 @@ IDEdge IDAsal IDTujuan Jarak
 ```
 Berikut ini adalah contoh daftar jalan penghubung antar kota pada FileEdge.txt
 ```
-1 1 2 80
-2 1 3 200
-3 2 3 150
+0 1 2 80
+1 1 3 200
+2 2 3 150
 ```
 Pastikan bahwa setiap jalan pada FileEdge.txt menghubungkan kota-kota yang bersesuaian dengan daftar kota pada FileNode.txt
+Setiap ID baik dalam File koordinat maupun edge harus terurut menaik dari 0 s.d N.
 
 3. Masukkan jumlah salesman yang diinginkan. Pastikan jumlah salesman tidak melebihi banyaknya kota.
-4. Masukkan kota asal (origin city).
+4. Masukkan pilihan metode pemilihan depot. Terdapat dua metode, yaitu user-defined depot dan random factor.
 5. Aplikasi akan memproses masukkan pengguna untuk diolah menjadi kumpulan rute terpendek.
 6. Aplikasi akan menampilkan visualisasi peta dan rute-rute yang dilewati oleh setiap salesman.
+Catatan : Mohon bersabar menunggu dalam proses-proses seperti visualisasi dan pembangkitan matriks
 
 ## Checklist Milestone Pengerjaan
 - [X] Milestone 1 : Pembacaan File dan Representasi Graf dalam Matrix
@@ -132,7 +134,7 @@ Pastikan bahwa setiap jalan pada FileEdge.txt menghubungkan kota-kota yang berse
 * [Python](https://www.python.org/) - Back End dari Aplikasi
 
 ## Referensi Awal Pengerjaan Tugas
-Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:
+Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:<br>
 [1] Dataset : https://www.cs.utah.edu/~lifeifei/SpatialDataset.htm<br>
 [2] Pengenalan dan formulasi mTSP : https://neos-guide.org/content/multiple-traveling-salesman-problem-mtsp<br>
 [3] MIP , pustaka Python untuk optimisasi : https://python-mip.readthedocs.io/en/latest/intro.html<br>
@@ -152,7 +154,7 @@ Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:
 Thank you for Li Fei Fei et. al. for providing the data.
 
 ## Catatan
-Pencarian rute untuk setiap agen mungkin tidak menghasilkan solusi atau rute yang optimal mengingat pembagian tugas kota-kota dilakukan secara acak.
+Pencarian rute untuk setiap agen mungkin tidak menghasilkan solusi atau rute yang optimal mengingat pembagian tugas kota-kota dilakukan berdasarkan pembagian daerah koordinat-koordinat.
 
 ## Author
 **13518056 - Michael Hans** - *Designer, Programmer, and Tester*

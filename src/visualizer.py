@@ -19,17 +19,18 @@ def Plotting(P, name, k):
     elif (k == 2):
         plt.plot([x], [y], 'ro', color = "blue")
 
-    # If Point P is the visited city
+    # If Point P is the station city
     elif (k == 3):
         plt.plot([x], [y], 'ro', color = "red")
 
     # If Point P is the unvisited city
     else :
-        plt.plot([x], [y], 'ro', color = "black")
+        plt.plot([x], [y], 'ro', color = "silver")
 
     # label = "%d(%d,%d)" % (name, x, y)
-    label = "%d" % (name)
-    plt.annotate(label, (x,y), textcoords="offset points", xytext=(0,10), ha='center')
+    if ((k == 1) or (k == 3)):
+        label = "%d" % (name)
+        plt.annotate(label, (x,y), textcoords="offset points", xytext=(0,10), ha='center')
 
 # Connect two points
 def ConnectPointsRandomColor(maps, origin, destination, cost, k, colors):
@@ -40,7 +41,7 @@ def ConnectPointsRandomColor(maps, origin, destination, cost, k, colors):
         rgb = (thecolor[0], thecolor[1], thecolor[2])
         plt.plot([x1,x2],[y1,y2],'k-', color = rgb)
     else:
-        plt.plot([x1,x2],[y1,y2],'k-', color = "black")
+        plt.plot([x1,x2],[y1,y2],'k-', color = "silver")
 
 # Generate about numOfRoute random color to distinguish every salesman route
 def GenerateRandomColors(numOfRoute):
