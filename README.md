@@ -29,9 +29,9 @@ Masalah Logistic Routing Problem dibagi menjadi 2 bagian, yaitu:
   h(n) = nilai heuristik berdasarkan jarak garis lurus antara simpul n ke simpul tujuan
 
   Nilai heuristik h(n) dikatakan feasible apabila jarak garis lurus antara simpul n ke simpul tujuan tidak melebihi jarak perjalanan simpul n ke simpul tujuan yang sebenarnya. Secara umum, nilai heuristik h(n) dapat dihitung dengan formula sebagai berikut.
-  ```
+  
   ![Euclidean Distance](assets/Heuristic.png)
-  ```
+
   Keterangan:
   x1 = posisi horizontal x dari titik asal pada koordinat kartesius
   x2 = posisi horizontal x dari titik tujuan pada koordinat kartesius
@@ -52,7 +52,7 @@ Masalah Logistic Routing Problem dibagi menjadi 2 bagian, yaitu:
 
   Kecenderungan memilih jalan dengan pheromone terbanyak dapat direpresentasikan sebagai probabilitas dalam memilih jalan. Setiap kembalinya semut, maka terdapat zat pheromone yang ditinggalkan yang dapat mengalami evaporasi. Semakin sering suatu jalan dipilih, maka zat pheromone pada jalan tersebut semakin tinggi. Begitupula sebaliknya. Akhirnya, probabilitas pemilihan bergantung pada jarak tempuh suatu rute. Algoritma ini diterapkan dalam penyelesaian Travelling Salesperson problem.
 
-  ![Ant-Colony Optimization](assets/ACO Formula.png)
+  ![Ant-Colony-Optimization]("assets/ACO Formula.png")
 
 ### Teknik mTSP yang diterapkan
   Penyelesaian mTSP dilakukan dengan membagi m salesperson ke dalam m tur sedemikian rupa sehingga diperoleh bobot total sedikit mungkin. Pendekatan yang digunakan dalam penyelesaian mTSP adalah dengan membagi daerah-daerah tur untuk setiap salesman yang tersedia. Bila terdapat m salesman, maka terdapat m pembagian daerah. Pembagian daerah ini didasarkan pada posisi dan koordinat setiap titik atau kota. Mengingat Logistic Routing Problem menyediakan informasi koordinat, maka kita bisa memanfaatkan koordinat-koordinat tersebut sebagai teknik pembagian daerah mTSP.
@@ -75,7 +75,6 @@ Berikut ini adalah persiapan environment yang dibutuhkan untuk menjalankan aplik
 ```
 - Python 3.x.x untuk bahasa pemrograman aplikasi
 - Matplotlib Library untuk visualisasi peta
-- GraphViz Library untuk visualisasi graf sederhana
 ```
 
 ### Installing
@@ -84,9 +83,9 @@ Berikut ini adalah langkah-langkah dalam penginstallan aplikasi:
 ```
 pip install matplotlib
 ```
-2. Install library GraphViz terlebih dahulu menggunakan command sebagai berikut.
+2. Lakukan pengujian instalasi matplotlib dengan mengetik command berikut pada python-command.
 ```
-pip install graphviz
+import matplotlib.pyplot as plt
 ```
 3. Semua prerequisites sudah disiapkan dengan baik.
 
@@ -127,7 +126,7 @@ Pastikan bahwa setiap jalan pada FileEdge.txt menghubungkan kota-kota yang berse
 ## Checklist Milestone Pengerjaan
 - [X] Milestone 1 : Pembacaan File dan Representasi Graf dalam Matrix
 - [X] Milestone 2 : Mengembalikan Solusi Multiple TSP
-- [X] Milestone 3 : Visualisasi Rute olusi Multiple TSP
+- [X] Milestone 3 : Visualisasi Rute Solusi Multiple TSP
 
 ## Built With
 * [Python](https://www.python.org/) - Back End dari Aplikasi
