@@ -14,29 +14,58 @@ Setiap beberapa jam sekali, sebuah perusahaan logistik akan mengirimkan beberapa
 ## Multiple-Agent TSP
 Masalah pengantaran barang untuk satu kendaraan dengan fungsi objektif jarak minimal dapat dimodelkan oleh Travelling Salesman Problem. Akan tetapi, perusahaan logistik biasanya memiliki lebih dari satu kendaraan yang berangkat bersamaan, sehingga TSP kurang cocok digunakan. Generalisasi TSP untuk beberapa agen adalah **multiple-agent TSP (mTSP)**, dan model masalah ini akan kita gunakan. Pada mTSP, akan terdapat *m* tur yang akan dibangun. Syarat dari semua tur mirip dengan TSP, yaitu bahwa seluruh tur akan kembali ke simpul awal (mewakili kantor pusat) dan setiap tujuan hanya akan dilewati oleh satu tur.
 
-## Tugas
-Kita akan menggunakan dataset jalanan pada kota Oldenburg yang dapat diakses pada <a href="https://www.cs.utah.edu/~lifeifei/SpatialDataset.htm">tautan ini.</a> Lakukan pengunduhan untuk kedua data jalanan di kota Oldenburg. Data pertama merupakan koordinat simpul, data kedua merupakan data sisi antar simpul. Asumsikan seluruh jalan dua arah.<br> 
-Seperti yang disebutkan sebelumnya, kita akan menggunakan pendekatan mTSP dalam permasalahan ini. Untuk mempermudah anda dan mempermudah penilaian, tugas akan dibagi dalam beberapa tahap.
+## Pendekatan Permasalahan
+Masalah Logistic Routing Problem dibagi menjadi 2 bagian, yaitu:
+### Pathfinding
+  Pathfinding merupakan teknik penelusuran graf pada graf berbobot yang digunakan untuk mencari rute dengan bobot terpendek dari satu simpul ke simpul lainnya. Dalam penyelesaian Logistic Routing Problem, pathfinding digunakan untuk menelusuri jalan sehingga diperoleh rute dengan jarak tempuh terpendek.
+  Setiap kota atau titik dalam suatu daerah direpresentasikan oleh simpul-simpul pada graf. Setiap jalan yang menghubungkan antar kota direpresentasikan oleh sisi(v,w) dengan v adalah simpul asal dan w adalah simpul tujuan. Setiap jalan tentu memiliki jaraknya masing-masing sehingga setiap sisi(v,w) memiliki bobot bernilai jarak tersebut.
+  Pendekatan pathfinding yang digunakan adalah algoritma A*. Algoritma A* adalah algoritma heuristik yang populer digunakan dalam menelusuri graf sehingga diperoleh rute terpendek. Algoritma A* memiliki formula umum sebagai berikut.
+  ```
+  f(n) = g(n) + h(n)
+  ```
+  Dalam kasus Logistic Routing Problem, setiap komponen tersebut memiliki makna sebagai berikut.
+  f(n) = cost total untuk mencapai simpul tujuan melalui simpul n
+  g(n) = jarak tempuh yang sudah ditempuh dari simpul asal ke simpul n
+  h(n) = nilai heuristik berdasarkan jarak garis lurus antara simpul n ke simpul tujuan
 
-### Milestone 1
-Pada milestone 1, anda diminta untuk membangun sebuah upagraf dari graf jalan keseluruhan kota Oldenburg. Upagraf tersebut merupakan sebuah graf lengkap tak berarah, dengan simpul-simpulnya adalah titik tujuan pengiriman barang ditambah titik yang mewakili kantor pusat perusahaan logistik. Hasilkan sebuah matriks jarak antar simpul upagraf lengkap. Nilai untuk milestone pertama maksimal adalah **600**.
+  Nilai heuristik h(n) dikatakan feasible apabila jarak garis lurus antara simpul n ke simpul tujuan tidak melebihi jarak perjalanan simpul n ke simpul tujuan yang sebenarnya. Secara umum, nilai heuristik h(n) dapat dihitung dengan formula sebagai berikut.
+  ```
+  ![Euclidean Distance](assets/Heuristic.png)
+  ```
+  Keterangan:
+  x1 = posisi horizontal x dari titik asal pada koordinat kartesius
+  x2 = posisi horizontal x dari titik tujuan pada koordinat kartesius
+  y1 = posisi vertikal y dari titik asal pada koordinat kartesius
+  y2 = posisi vertikal y dari titik tujuan pada koordinat kartesius
+  
+  Nilai f(n) ini akan menjadi pertimbangan dalam memilih simpul-simpul selanjutnya dalam penelusuran graf. Dengan demikian, penelusuran graf bisa berjalan lebih cepat dalam mencapai simpul tujuan.
 
-### Milestone 2
-Pada Milestone 2 , anda akan menggunakan upagraf yang telah dihasilkan pada Milestone 1 untuk membangun rute dari para kurir dengan pendekatan mTSP. Tampilkan rute yang diambil oleh tiap kurir. Nilai maksimal pada milestone kedua adalah **1500**
+### Multiple Traveling Salesperson Problem
+  Seperti yang sudah disebutkan di atas, Multiple Traveling Salesperson Problem merupakan permasalahan yang serupa dengan TSP, namun salesperson yang digunakan lebih dari 1 salesperson atau m salesperson. Dari pengertian disebut, maka keluaran yang diharapkan dari permasalahan ini adalah m tur dengan bobot total terkecil. Pendekatan permasalahan dimulai dengan menentukan teknik TSP terlebih dahulu. Pada project ini, teknik TSP yang digunakan adalah **Ant-Colony Optimization**.
 
-### Milestone 3
-Setelah berhasil mendapatkan rute bagi para kurir, selanjutnya anda diminta untuk menggambarkan rute dari para kurir. Visualisasi rute  minimal membedakan warna rute untuk tiap kurir dan menampilkan upagraf yang digunakan untuk membuat rute. Nilai lebih akan diberikan jika anda dapat menampilkan rute beserta seluruh peta jalan di kota Oldenburg. Nilai minimal adalah **800** dan nilai maksimal adalah **1500**
+  Ant-Colony Optimization merupakan salah satu algoritma meta-heuristic yang juga merupakan bagian dari Swarm-Intelligence. Algoritma ini merupakan algoritma yang prinsip kerjanya terinspirasi dari perilaku makhluk hidup, yaitu semut. Perilaku semut yang menjadi inspirasi untuk algoritma ini adalah perilaku semut dalam mencari makanan. Semut tidak dapat berkomunikasi secara langsung. Semut berkomunikasi melalui pheromone yang didepositkan oleh semut-semut sebelumnya. Apabila suatu jalan memiliki kandungan pheromone yang besar, maka semut akan cenderung memilih jalan tersebut. Berikut ini adalah ilustrasi alur kerja Ant-Colony Optimization.
+  1. Di awal pencarian makanan, semut-semut akan berjalan secara acak melalui path tertentu untuk mencapai sumber makanan.
+  2. Dalam perjalanan setiap semut, mereka akan mengeluarkan zat pheromone dalam perjalanannya sehingga dapat diikuti oleh semut lainnya.
+  3. Setelah semut mencapai sumber makanan, semut akan memilih rute secara acak kembali melalui path tertentu.
+  4. Bila semut sampai ke tempat asal lebih awal, semut-semut lainnya akan cenderung memilih jalan dengan pheromone terbanyak, yaitu jalan dengan path terkecil.
+  5. Ketika pencarian makanan sudah melibatkan semut yang sangat banyak, maka kecenderungan memilih tersebut akan semakin tinggi hingga hampir setiap semut memilih jalan yang sama.
 
-## Pengerjaan
-Tugas ini individual.<br>
-Lakukan *fork* terhadap *repository* ini.<br>
-Spek tugas cukup umum, sehingga asisten tidak membatasi algoritma maupun bahasa pemrograman yang digunakan, walaupun **penggunaan Python disarankan**. Algoritma yang digunakan untuk pathfinding harus optimal, namun hasil dari mTSP tidak harus optimal (*Note : beberapa pustaka optimization bisa menghasilkan solusi sub-optimal dalam batas waktu tertentu*). Bila merasa sudah menyelesaikan tugas, silahkan lakukan pull request dan hubungi asisten lewat email untuk melakukan demo.<br>
-Pastikan ada menambahkan/menggati README ini saat mengumpulkan. README minimal mengandung :
+  Kecenderungan memilih jalan dengan pheromone terbanyak dapat direpresentasikan sebagai probabilitas dalam memilih jalan. Setiap kembalinya semut, maka terdapat zat pheromone yang ditinggalkan yang dapat mengalami evaporasi. Semakin sering suatu jalan dipilih, maka zat pheromone pada jalan tersebut semakin tinggi. Begitupula sebaliknya. Akhirnya, probabilitas pemilihan bergantung pada jarak tempuh suatu rute. Algoritma ini diterapkan dalam penyelesaian Travelling Salesperson problem.
 
-1. Pendekatan algoritma yang digunakan untuk pathfinding dan penyelesaian mTSP, serta 
-2. Cara menjalankan program, termasuk instalasi pustaka bila menggunakan bermacam pustaka
+  ![Ant-Colony Optimization](assets/ACO Formula.png)
 
-Anda bebas menggunakan pustaka maupun referensi apapun untuk mengerjakan tugas, kecuali kode/pustaka jadi yang melakukan *routing*, karena tujuan tugas adalah membuat sebuah prototipe pembuatan rute. Pastikan anda mencantumkan sumber bilamana anda menggunakan kode dari orang lain. Akan tetapi, pemahaman terhadap solusi masalah menjadi bagian penting dari penilaian , sehingga anda disarankan untuk menuliskan kode anda sendiri.<br>
+### Teknik mTSP yang diterapkan
+  Penyelesaian mTSP dilakukan dengan membagi m salesperson ke dalam m tur sedemikian rupa sehingga diperoleh bobot total sedikit mungkin. Pendekatan yang digunakan dalam penyelesaian mTSP adalah dengan membagi daerah-daerah tur untuk setiap salesman yang tersedia. Bila terdapat m salesman, maka terdapat m pembagian daerah. Pembagian daerah ini didasarkan pada posisi dan koordinat setiap titik atau kota. Mengingat Logistic Routing Problem menyediakan informasi koordinat, maka kita bisa memanfaatkan koordinat-koordinat tersebut sebagai teknik pembagian daerah mTSP.
+
+  Secara sederhana, penentuan m daerah untuk m salesperson dilakukan sebagai berikut.
+  1. Tentukan terlebih dahulu depot-depot atau stasiun logistik yang akan digunakan.
+  2. Tentukan depot pusat yang digunakan sebagai depot awal dan akhir.
+  2. Depot-depot tersebut akan dimasukkan dalam sebuah senarai yang berisi ID setiap depot.
+  3. Lakukan pengurutan senarai sedemikian rupa berdasarkan koordinat masing-masing depot sehingga senarai memiliki koordinat-koordinat yang terurut membesar.
+  4. Hapus depot pusat dari senarai tersebut.
+  5. Karena senarai sudah terurut, lakukan pembagian per m depot dalam senarai tersebut. Bila hasil pembagian depot tidak bulat, depot yang tersisa akan dimasukkan pada sub-array awal atau akhir.
+  6. Lakukan penambahan depot pusat pada setiap sub-array untuk menjamin bahwa tur dimulai dan berakhir pada depot pusat.
+  7. Setiap sub-array ke-i akan menjadi tur TSP untuk salesperson ke-i
 
 ## Getting Started
 Instruksi-instruksi berikut ini akan membimbing Anda dalam tahap instalasi aplikasi dan cara menjalankannya.
