@@ -1,4 +1,4 @@
-# Graph.py
+# loader.py
 # Contain of all module to generate graph
 
 from point import *
@@ -45,9 +45,9 @@ def PrintMatrix (A, numOfCity):
         print("|", end="")
         for j in range (0,numOfCity):
             if (A[i][j] == np.inf):
-                print(" ~inf~\t|",end="")
+                print(" ~inf~\t\t|",end="")
             else:
-                print(" "+str(A[i][j])+"\t|",end="")
+                print(" {:0.4f}".format(A[i][j])+"\t|",end="")
         print()
     print()
 
@@ -78,15 +78,3 @@ def TestRoutedStreet(boolStreets):
     for key in boolStreets:
         if (boolStreets[key] > -1):
             print(key,"->","HeyTayo!")
-
-# Milestone 1 : Generate graph in matrix
-def Milestone1():
-    maps = {}
-    boolStreet = {}
-    maps = LoadCoordinate("SthyrelestNode.txt")
-    PrintCoordinateInfo(maps)
-    streets = LoadStreet("SthyrelestEdge.txt")
-    PrintStreetInfo(streets)
-    graphMatrix = ConvertStreetsIntoGraph(streets, len(maps))
-    PrintMatrix(graphMatrix, len(maps))
-    boolStreets = GetBooleanStreets(streets)

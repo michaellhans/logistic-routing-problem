@@ -104,7 +104,7 @@ Pastikan bahwa setiap jalan pada FileEdge.txt menghubungkan kota-kota yang berse
 * [Python](https://www.python.org/) - Back End dari Aplikasi
 
 ## Referensi Awal Pengerjaan Tugas
-Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:<br>
+Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:
 [1] Dataset : https://www.cs.utah.edu/~lifeifei/SpatialDataset.htm<br>
 [2] Pengenalan dan formulasi mTSP : https://neos-guide.org/content/multiple-traveling-salesman-problem-mtsp<br>
 [3] MIP , pustaka Python untuk optimisasi : https://python-mip.readthedocs.io/en/latest/intro.html<br>
@@ -112,13 +112,12 @@ Silahkan gunakan referensi berikut sebagai awal pengerjaan tugas:<br>
 [5]  Li, Feifei, Dihan Cheng, Marios Hadjieleftheriou, George Kollios, and Shang-Hua Teng. "On trip planning queries in spatial databases." In International symposium on spatial and temporal databases, pp. 273-290. Springer, Berlin, Heidelberg, 2005.
 
 ## Referensi Formulasi Multiple TSP
-[1] Solving Multiple TSP Problem by K-Means and Crossover based Modified ACO Algorithm : https://www.ijert.org/research/solving-multiple-tsp-problem-by-k-means-and-crossover-based-modified-aco-algorithm-IJERTV5IS020474.pdf
-[2] Vehicle Routing Problem : https://developers.google.com/optimization/routing/vrp
-[3] Amazing Collection Vehicle Routing Problem : https://github.com/ashishpatel26/Amazing-Collection-Vehicle-Routing-Problem
-[4] Vehicle Routing Problem : https://github.com/jwang0306/vehicle-routing-problem
-[5] An Ant Colony Optimization Algorithm for
-Multiple Travelling Salesman Problem : https://www2.cs.siu.edu/~rahimi/shared/TSM/01691778.pdf
-[6] Dijkstra Algorithm for Pathfinding : https://informatika.stei.itb.ac.id/~rinaldi.munir/Stmik/2019-2020/Algoritma-Greedy-(2020).pdf
+[1] Solving Multiple TSP Problem by K-Means and Crossover based Modified ACO Algorithm : https://www.ijert.org/research/solving-multiple-tsp-problem-by-k-means-and-crossover-based-modified-aco-algorithm-IJERTV5IS020474.pdf<br>
+[2] Vehicle Routing Problem : https://developers.google.com/optimization/routing/vrp<br>
+[3] Amazing Collection Vehicle Routing Problem : https://github.com/ashishpatel26/Amazing-Collection-Vehicle-Routing-Problem<br>
+[4] Vehicle Routing Problem : https://github.com/jwang0306/vehicle-routing-problem<br>
+[5] An Ant Colony Optimization Algorithm for Multiple Travelling Salesman Problem : https://www2.cs.siu.edu/~rahimi/shared/TSM/01691778.pdf<br>
+[6] Dijkstra Algorithm for Pathfinding : https://informatika.stei.itb.ac.id/~rinaldi.munir/Stmik/2019-2020/Algoritma-Greedy-(2020).pdf<br>
 [7] A* Algorithm for Pathfinding : https://www.annytab.com/a-star-search-algorithm-in-python/
 
 ## Credits

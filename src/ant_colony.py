@@ -60,7 +60,7 @@ class AntColony(object):
             # The shortest path will be considered if it is None
             if (shortest_path != None):
                 if (shortest_path[0] != None):
-                    print (shortest_path)
+                    # print (shortest_path)
                     
                     # The path is return to the origin city
                     if (shortest_path[0][-1][1] == 0):
@@ -136,5 +136,3 @@ class AntColony(object):
             norm_row = row / row.sum()
             move = np_choice(self.all_inds, 1, p=norm_row)[0]
             return move
-
-
